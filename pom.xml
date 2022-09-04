@@ -16,21 +16,104 @@
     <packaging>pom</packaging>
     <modules>
         <module>data-demo-web</module>
+        <module>data-demo-core</module>
+        <module>data-demo-common</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
+        <jjwt.version>0.11.2</jjwt.version>
+        <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
+        <jna.version>5.8.0</jna.version>
+
+        <fastjson.version>1.2.83</fastjson.version>
+        <druid.version>1.2.8</druid.version>
+        <commons-pool2.version>2.11.1</commons-pool2.version>
+        <data-demo-common.version>1.0.0-SNAPSHOT</data-demo-common.version>
+        <data-demo-core.version>1.0.0-SNAPSHOT</data-demo-core.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+            </dependency>
+            <!--Spring boot 安全框架-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+            </dependency>
+            <!--Spring boot Redis-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+            </dependency>
+
+            <!-- druid数据源驱动 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
+            </dependency>
+
+            <!-- fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!--lombok插件-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>com.longmai</groupId>
+                <artifactId>data-demo-core</artifactId>
+                <version>${data-demo-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.longmai</groupId>
+                <artifactId>data-demo-common</artifactId>
+                <version>${data-demo-common.version}</version>
+            </dependency>
+
+            <!-- jwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+
 
     <build>
         <plugins>

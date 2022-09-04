@@ -25,6 +25,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.longmai</groupId>
+            <artifactId>data-demo-core</artifactId>
+        </dependency>
+        
     </dependencies>
 
     <build>
