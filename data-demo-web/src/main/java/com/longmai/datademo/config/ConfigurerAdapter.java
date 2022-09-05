@@ -69,7 +69,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         String pathUtl = "file:" + path.getPath().replace("\\","/");
         registry.addResourceHandler("/avatar/**").addResourceLocations(avatarUtl).setCachePeriod(0);
         registry.addResourceHandler("/file/**").addResourceLocations(pathUtl).setCachePeriod(0);
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/web-root/static/").setCachePeriod(0);
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/web-root/templates/static/").setCachePeriod(0);
     }
 
     @Override
