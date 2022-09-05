@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.zhengjie.utils;
+package com.longmai.datademo.utils;
 
 /**
  * @author: liaojinlong

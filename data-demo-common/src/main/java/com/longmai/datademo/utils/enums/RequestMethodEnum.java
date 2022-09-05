@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.utils.enums;
+package com.longmai.datademo.utils.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

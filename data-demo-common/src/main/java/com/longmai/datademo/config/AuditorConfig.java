@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.config;
+package com.longmai.datademo.config;
 
-import me.zhengjie.utils.SecurityUtils;
+import com.longmai.datademo.utils.SecurityUtils;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 import java.util.Optional;

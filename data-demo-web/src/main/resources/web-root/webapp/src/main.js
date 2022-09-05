@@ -1,26 +1,38 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+
+import Cookies from 'js-cookie'
+
+import 'normalize.css/normalize.css'
+
+import Element from 'element-ui'
+
+// 权限指令
+import checkPer from '@/utils/permission'
+import permission from './components/Permission'
+import './assets/styles/element-variables.scss'
+
+// global css
+import './assets/styles/index.scss'
+
 import App from './App'
-import VueRouter from "vue-router";
-import {routes} from './router/routes';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import store from './store'
+import router from './router/routers'
 
-Vue.config.productionTip = false;
+import './assets/icons' // icon
+import './router/index' // permission control
 
-Vue.use(ElementUI);
-Vue.use(VueRouter);
+Vue.use(checkPer)
+Vue.use(permission)
 
-const router = new VueRouter({
-  routes,
-  mode: 'history',
-});
+Vue.use(Element, {
+  size: Cookies.get('size') || 'small' // set element-ui default size
+})
 
-/* eslint-disable no-new */
+Vue.config.productionTip = false
+
 new Vue({
   el: '#app',
   router,
-  components: { App },
-  template: '<App/>'
+  store,
+  render: h => h(App)
 })

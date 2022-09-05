@@ -13,12 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.exception.handler;
+package com.longmai.datademo.exception.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.exception.EntityExistException;
-import me.zhengjie.exception.EntityNotFoundException;
+import com.longmai.datademo.exception.BadRequestException;
+import com.longmai.datademo.exception.EntityExistException;
+import com.longmai.datademo.exception.EntityNotFoundException;
 import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -6,7 +6,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.longmai</groupId>
     <artifactId>data-demo-parent</artifactId>
@@ -30,8 +29,8 @@
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <data-demo-common.version>1.0.0-SNAPSHOT</data-demo-common.version>
         <data-demo-core.version>1.0.0-SNAPSHOT</data-demo-core.version>
+        <log4jdbc.version>1.16</log4jdbc.version>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -48,13 +47,14 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-security</artifactId>
+                <version>2.6.4</version>
             </dependency>
             <!--Spring boot Redis-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>2.6.4</version>
             </dependency>
-
             <!-- druid数据源驱动 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -62,26 +62,38 @@
                 <version>${druid.version}</version>
             </dependency>
 
+            <!--监控sql日志-->
+            <dependency>
+                <groupId>org.bgee.log4jdbc-log4j2</groupId>
+                <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+                <version>${log4jdbc.version}</version>
+            </dependency>
+
+            <!--spring boot 集成redis所需common-pool2-->
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-pool2 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons-pool2.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.12.0</version>
+            </dependency>
             <!-- fastjson -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-
             <!--lombok插件-->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <optional>true</optional>
+                <version>1.18.22</version>
             </dependency>
-
             <dependency>
                 <groupId>com.longmai</groupId>
                 <artifactId>data-demo-core</artifactId>
@@ -92,7 +104,6 @@
                 <artifactId>data-demo-common</artifactId>
                 <version>${data-demo-common.version}</version>
             </dependency>
-
             <!-- jwt -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
@@ -109,7 +120,22 @@
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>31.1-jre</version>
+            </dependency>
+            <!-- Java图形验证码 -->
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.2</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

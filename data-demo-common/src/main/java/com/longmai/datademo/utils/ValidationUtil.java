@@ -13,11 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.utils;
+package com.longmai.datademo.utils;
 
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
-import me.zhengjie.exception.BadRequestException;
+import com.longmai.datademo.exception.BadRequestException;
 
 /**
  * 验证工具
