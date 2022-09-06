@@ -41,7 +41,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
-                <scope>test</scope>
+                <version>2.6.4</version>
             </dependency>
             <!--Spring boot 安全框架-->
             <dependency>

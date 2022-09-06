@@ -20,6 +20,7 @@ import com.longmai.datademo.security.config.bean.SecurityProperties;
 import com.longmai.datademo.security.service.OnlineUserService;
 import com.longmai.datademo.security.service.UserCacheManager;
 import com.longmai.datademo.security.service.dto.OnlineUserDto;
+import com.longmai.datademo.service.RoleService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,7 @@ public class TokenFilter extends GenericFilterBean {
             OnlineUserDto onlineUserDto = null;
             boolean cleanUserCache = false;
             try {
-//                onlineUserDto = onlineUserService.getOne(properties.getOnlineKey() + token);
+                onlineUserDto = onlineUserService.getOne(properties.getOnlineKey() + token);
             } catch (ExpiredJwtException e) {
                 log.error(e.getMessage());
                 cleanUserCache = true;

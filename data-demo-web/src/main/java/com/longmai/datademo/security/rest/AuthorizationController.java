@@ -21,6 +21,8 @@ import com.longmai.datademo.annotation.rest.AnonymousDeleteMapping;
 import com.longmai.datademo.annotation.rest.AnonymousGetMapping;
 import com.longmai.datademo.annotation.rest.AnonymousPostMapping;
 import com.longmai.datademo.config.RsaProperties;
+import com.longmai.datademo.dto.MenuDto;
+import com.longmai.datademo.dto.UserDto;
 import com.longmai.datademo.exception.BadRequestException;
 import com.longmai.datademo.security.config.bean.LoginCodeEnum;
 import com.longmai.datademo.security.config.bean.LoginProperties;
@@ -29,6 +31,7 @@ import com.longmai.datademo.security.security.TokenProvider;
 import com.longmai.datademo.security.service.OnlineUserService;
 import com.longmai.datademo.security.service.dto.AuthUserDto;
 import com.longmai.datademo.security.service.dto.JwtUserDto;
+import com.longmai.datademo.service.UserService;
 import com.longmai.datademo.utils.*;
 import com.wf.captcha.base.Captcha;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +56,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -73,10 +77,11 @@ public class AuthorizationController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     @Resource
     private LoginProperties loginProperties;
-//    @Autowired
-//    private UserService userService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private UserDetailsService userDetailsService;
+
 
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
@@ -84,43 +89,39 @@ public class AuthorizationController {
         String password = null;
         String username = authUser.getUsername();
         Authentication authentication;
-//        if (authUser.getAuthMethod() == 1){
-//            UserDto userDto = userService.findByDn(authUser.getDn());
-//            UserDto userDto = new UserDto();
-//            if (userDto == null){
-//                throw new BadRequestException("设备号无效");
-//            }
-//            PublicKey publicKey = CertUtils.getPublicKey(userDto.getCert());
-//            if(publicKey == null){
-//                throw new BadRequestException("证书不存在");
-//            }
-//            if(!RsaUtils.verify(authUser.getPreSignCode(), authUser.getSign(), publicKey, "SHA1withRSA")){
-//                throw new BadRequestException("验签失败");
-//            }
-//            UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUserName());
-//            authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//
-//        }else {
-//            // 密码解密
-//            password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
-//            // 查询验证码
-//            String code = (String) redisUtils.get(authUser.getUuid());
-//            // 清除验证码
-//            redisUtils.del(authUser.getUuid());
-//            if (StringUtils.isBlank(code)) {
-//                throw new BadRequestException("验证码不存在或已过期");
-//            }
-//            if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-//                throw new BadRequestException("验证码错误");
-//            }
-//            UsernamePasswordAuthenticationToken authenticationToken =
-//                    new UsernamePasswordAuthenticationToken(username, password);
-//            authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//        }
+        if (authUser.getAuthMethod() == 1){
+            UserDto userDto = userService.findByDn(authUser.getDn());
+            if (userDto == null){
+                throw new BadRequestException("设备号无效");
+            }
+            PublicKey publicKey = CertUtils.getPublicKey(userDto.getCert());
+            if(publicKey == null){
+                throw new BadRequestException("证书不存在");
+            }
+            if(!RsaUtils.verify(authUser.getPreSignCode(), authUser.getSign(), publicKey, "SHA1withRSA")){
+                throw new BadRequestException("验签失败");
+            }
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUserName());
+            authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-        authentication =
+        }else {
+            // 密码解密
+            password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+            // 查询验证码
+            String code = (String) redisUtils.get(authUser.getUuid());
+            // 清除验证码
+            redisUtils.del(authUser.getUuid());
+            if (StringUtils.isBlank(code)) {
+                throw new BadRequestException("验证码不存在或已过期");
+            }
+            if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+                throw new BadRequestException("验证码错误");
+            }
+            UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(username, password);
+            authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        }
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = tokenProvider.createToken(authentication);
         final JwtUserDto jwtUserDto = (JwtUserDto) authentication.getPrincipal();
@@ -178,5 +179,7 @@ public class AuthorizationController {
         }};
         return ResponseEntity.ok(resMap);
     }
+
+
 
 }

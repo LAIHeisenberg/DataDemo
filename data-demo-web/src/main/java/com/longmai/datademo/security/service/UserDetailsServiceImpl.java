@@ -15,13 +15,15 @@
  */
 package com.longmai.datademo.security.service;
 
-import com.google.common.collect.Lists;
 import com.longmai.datademo.exception.BadRequestException;
 import com.longmai.datademo.exception.EntityNotFoundException;
 import com.longmai.datademo.security.service.dto.JwtUserDto;
-import com.longmai.datademo.security.service.dto.UserLoginDto;
+import com.longmai.datademo.dto.UserLoginDto;
+import com.longmai.datademo.service.RoleService;
+import com.longmai.datademo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
-//    private final UserService userService;
+
+    @Autowired
+    private final UserService userService;
     private final UserCacheManager userCacheManager;
+    @Autowired
+    private final RoleService roleService;
 
     @Override
     public JwtUserDto loadUserByUsername(String username) {
@@ -43,8 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(jwtUserDto == null){
             UserLoginDto user;
             try {
-//                user = userService.getLoginData(username);
-                user = new UserLoginDto();
+                user = userService.getUserLoginDto(username);
             } catch (EntityNotFoundException e) {
                 // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
                 throw new UsernameNotFoundException(username, e);
@@ -52,12 +57,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (user == null) {
                 throw new UsernameNotFoundException("");
             } else {
-                if (!user.isEnabled()) {
+                if (!user.getEnabled()) {
                     throw new BadRequestException("账号未激活！");
                 }
                 jwtUserDto = new JwtUserDto(
-                        user, Lists.newArrayList()
-//                        roleService.mapToGrantedAuthorities(user)
+                        user,
+                        roleService.mapToGrantedAuthorities(user)
                 );
                 // 添加缓存数据
                 userCacheManager.addUserCache(username, jwtUserDto);

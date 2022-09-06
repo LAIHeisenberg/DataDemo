@@ -1,15 +1,16 @@
 package com.longmai.datademo.dao.po;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
-@Getter
-@Setter
+
+@Data
+@TableName("ddm_user")
 public class UserPo {
 
     private Long id;
 
-    private String username;
+    private String userName;
 
     private String nickName;
 
@@ -19,11 +20,11 @@ public class UserPo {
 
     private String gender;
 
-    private String avatarPath;
-
     private String password;
 
     private Integer authMethod;
+
+    private Boolean adminFlag;
 
     private String dn;
 

@@ -5,14 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/test")
+@RequestMapping("/")
+public class IndexController {
 
-public class TestController {
-
-    @RequestMapping("/index")
+    @RequestMapping({"","/index"})
     @AnonymousAccess
     public String index(){
         return "index";
     }
+
 
 }

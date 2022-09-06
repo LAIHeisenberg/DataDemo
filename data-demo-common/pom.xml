@@ -13,7 +13,7 @@
     </properties>
 
     <artifactId>data-demo-common</artifactId>
-    <name>公共模块</name>
+    <name>data-demo-common</name>
 
     <dependencies>
         <!--工具包-->

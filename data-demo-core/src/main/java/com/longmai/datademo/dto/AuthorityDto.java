@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.longmai.datademo.security.service.dto;
+package com.longmai.datademo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

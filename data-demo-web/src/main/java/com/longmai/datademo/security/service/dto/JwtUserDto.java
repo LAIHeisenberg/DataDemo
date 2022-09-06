@@ -16,7 +16,8 @@
 package com.longmai.datademo.security.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import lombok.AllArgsConstructor;
+import com.longmai.datademo.dto.AuthorityDto;
+import com.longmai.datademo.dto.UserLoginDto;
 import lombok.Getter;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
@@ -76,6 +77,6 @@ public class JwtUserDto implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public boolean isEnabled() {
-        return user.isEnabled();
+        return user.getEnabled();
     }
 }

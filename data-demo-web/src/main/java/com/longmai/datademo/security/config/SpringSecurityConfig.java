@@ -20,6 +20,7 @@ import com.longmai.datademo.security.config.bean.SecurityProperties;
 import com.longmai.datademo.security.security.*;
 import com.longmai.datademo.security.service.OnlineUserService;
 import com.longmai.datademo.security.service.UserCacheManager;
+import com.longmai.datademo.service.RoleService;
 import com.longmai.datademo.utils.enums.RequestMethodEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -60,6 +61,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityProperties properties;
     private final OnlineUserService onlineUserService;
     private final UserCacheManager userCacheManager;
+
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -106,6 +108,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/static/**/*.html",
                         "/static/**/*.css",
                         "/static/**/*.js",
+                        "/static/**",
                         "/webSocket/**"
                 ).permitAll()
                 // swagger 文档

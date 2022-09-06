@@ -9,7 +9,7 @@ public class UserDto {
 
     private Long id;
 
-    private String username;
+    private String userName;
 
     private String nickName;
 
@@ -25,9 +25,13 @@ public class UserDto {
 
     private Integer authMethod;
 
+    private Boolean isAdmin;
+
     private String dn;
 
     private String cert;
 
     private Boolean enabled;
+
+    private Long createTime;
 }

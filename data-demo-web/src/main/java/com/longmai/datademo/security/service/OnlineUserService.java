@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,8 +55,15 @@ public class OnlineUserService {
      */
     public void save(JwtUserDto jwtUserDto, String token, HttpServletRequest request){
 
-        redisUtils.set(properties.getOnlineKey() + token, jwtUserDto, properties.getTokenValidityInSeconds()/1000);
+        OnlineUserDto onlineUserDto = null;
+        try {
+            onlineUserDto = new OnlineUserDto(jwtUserDto.getUsername(), jwtUserDto.getUser().getUserName(), null, null , "127.0.0.1", "", EncryptUtils.desEncrypt(token), new Date());
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
+        }
+        redisUtils.set(properties.getOnlineKey() + token, onlineUserDto, properties.getTokenValidityInSeconds()/1000);
     }
+
 
 
     /**

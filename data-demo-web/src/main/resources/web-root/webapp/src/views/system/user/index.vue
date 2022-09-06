@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--侧边部门数据-->
-      <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4"></el-col>
+      <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4" />
       <!--用户数据-->
       <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
         <!--工具栏-->
@@ -44,7 +44,7 @@
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" @keydown.native="keydown($event)" />
             </el-form-item>
-            <el-form-item label="真实姓名" prop="realName" >
+            <el-form-item label="真实姓名" prop="realName">
               <el-input v-model="form.realName" @keydown.native="keydown($event)" />
             </el-form-item>
             <el-form-item label="用户类型" prop="userType">
@@ -83,34 +83,6 @@
                 <el-radio label="2">女</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.enabled" :disabled="form.id === user.id">
-                <el-radio
-                  v-for="item in dict.user_status"
-                  :key="item.id"
-                  :label="item.value"
-                >{{ item.label }}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item lable="分配权限" style="width: 300px">
-              <el-card class="box-card" shadow="never">
-                <div slot="header" class="clearfix">
-                  <el-tree
-                    ref="menu"
-                    lazy
-                    :data="menus"
-                    :default-checked-keys="menuIds"
-                    :load="getMenuDatas"
-                    :props="defaultProps"
-                    check-strictly
-                    accordion
-                    show-checkbox
-                    node-key="id"
-                    @check="menuChange"
-                  />
-                </div>
-              </el-card>
-            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button type="text" @click="crud.cancelCU">取消</el-button>
@@ -125,20 +97,10 @@
           <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
           <el-table-column prop="gender" label="性别" :formatter="function(row, column, cellValue, index){return cellValue == 1 ? '男' : '女'}" />
           <el-table-column prop="authMethod" label="认证方式" :formatter="function(row, column, cellValue, index){return cellValue == 1 ? '用户口令' : 'USBKEY'}" />
-          <el-table-column prop="role.name" label="用户类型"></el-table-column>
+          <el-table-column prop="role.name" label="用户类型" />
           <el-table-column :show-overflow-tooltip="true" prop="tel" width="100" label="电话" />
           <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
-          <el-table-column label="状态" align="center" prop="enabled">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.enabled"
-                :disabled="user.id === scope.row.id"
-                active-color="#409EFF"
-                inactive-color="#F56C6C"
-                @change="changeEnabled(scope.row, scope.row.enabled)"
-              />
-            </template>
-          </el-table-column>
+          <el-table-column label="状态" align="center" prop="enabled" />
           <el-table-column :show-overflow-tooltip="true" prop="pwdResetTime" width="135" label="修改密码时间" />
           <el-table-column :show-overflow-tooltip="true" prop="createTime" width="135" label="创建日期" />
           <el-table-column
@@ -173,15 +135,13 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import Treeselect from '@riophae/vue-treeselect'
 import { mapGetters } from 'vuex'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import { getMenusTree, getChild } from '@/api/system/menu'
 let userRoles = {}
-const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [],  phone: null }
+const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [], phone: null }
 export default {
   name: 'User',
-  components: { Treeselect, crudOperation, rrOperation, udOperation, pagination },
+  components: { crudOperation, rrOperation, udOperation, pagination },
   cruds() {
     return CRUD({ title: '用户', url: 'api/users', crudMethod: { ...crudUser }, optShow: {
       add: true,
@@ -191,7 +151,6 @@ export default {
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典
-  dicts: ['user_status'],
   data() {
     // 自定义验证
     const validPhone = (rule, value, callback) => {
@@ -205,7 +164,7 @@ export default {
     }
     return {
       height: document.documentElement.clientHeight - 180 + 'px;',
-      roles: [],menuIds: [],menus: [], 
+      roles: [], menuIds: [], menus: [],
       roleDatas: null,
       defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
       permission: {
@@ -226,11 +185,11 @@ export default {
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
-        authType : [
-          { required: true, message: '请输入真实姓名', trigger: 'blur' },
+        authType: [
+          { required: true, message: '请输入真实姓名', trigger: 'blur' }
         ],
         userType: [
-          { required: true, message: '请选择用户类型', trigger: 'blur' },
+          { required: true, message: '请选择用户类型', trigger: 'blur' }
         ],
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -265,7 +224,7 @@ export default {
     },
     changeRole(value) {
       userRoles = {
-        id : value
+        id: value
       }
     },
     // 新增与编辑前做的操作
@@ -293,22 +252,6 @@ export default {
       crud.form.role = userRoles
       return true
     },
-    // 改变状态
-    changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        crudUser.edit(data).then(res => {
-          this.crud.notify(this.dict.label.user_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-        }).catch(() => {
-          data.enabled = !data.enabled
-        })
-      }).catch(() => {
-        data.enabled = !data.enabled
-      })
-    },
     // 获取弹窗内角色数据
     getRoles() {
       getAll().then(res => {
@@ -318,37 +261,6 @@ export default {
     // 获取权限级别
     checkboxT(row, rowIndex) {
       return row.id !== this.user.id
-    },
-
-    getMenuDatas(node, resolve) {
-      setTimeout(() => {
-        getMenusTree(node.data.id ? node.data.id : 0).then(res => {
-          resolve(res)
-        })
-      }, 100)
-    },
-
-    menuChange(menu) {
-      // 获取该节点的所有子节点，id 包含自身
-      getChild(menu.id).then(childIds => {
-        // 判断是否在 menuIds 中，如果存在则删除，否则添加
-        if (this.menuIds.indexOf(menu.id) !== -1) {
-          for (let i = 0; i < childIds.length; i++) {
-            const index = this.menuIds.indexOf(childIds[i])
-            if (index !== -1) {
-              this.menuIds.splice(index, 1)
-            }
-          }
-        } else {
-          for (let i = 0; i < childIds.length; i++) {
-            const index = this.menuIds.indexOf(childIds[i])
-            if (index === -1) {
-              this.menuIds.push(childIds[i])
-            }
-          }
-        }
-        this.$refs.menu.setCheckedKeys(this.menuIds)
-      })
     }
   }
 }
