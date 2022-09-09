@@ -7,36 +7,26 @@
       <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
         <!--工具栏-->
         <div class="head-container">
-          <div v-if="crud.props.searchToggle">
-            <!-- 搜索 -->
-            <el-input
-              v-model="query.blurry"
-              clearable
-              size="small"
-              placeholder="输入名称或者邮箱搜索"
-              style="width: 200px;"
-              class="filter-item"
-              @keyup.enter.native="crud.toQuery"
-            />
-            <el-select
-              v-model="query.enabled"
-              clearable
-              size="small"
-              placeholder="状态"
-              class="filter-item"
-              style="width: 90px"
-              @change="crud.toQuery"
-            >
-              <el-option
-                v-for="item in enabledTypeOptions"
-                :key="item.key"
-                :label="item.display_name"
-                :value="item.key"
-              />
-            </el-select>
-            <rrOperation />
-          </div>
-          <crudOperation show="" :permission="permission" />
+          <el-row>
+            <el-col :span="6">
+              <h2 style="color:#df4c4c;">
+                当前登陆用户: {{currentUser.userName}}
+              </h2>
+            </el-col>
+            <el-col :span="4">
+              <h2 style="color:#df4c4c;">
+                电话: {{currentUser.phone}}
+              </h2>
+            </el-col>
+            <el-col :span="2">
+              &nbsp;
+            </el-col>
+            <el-col :span="10">
+              <h2 style="color:#df4c4c;">
+                邮箱：{{currentUser.email}}
+              </h2>
+            </el-col>
+          </el-row>
         </div>
         <!--表单渲染-->
         <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="570px">
@@ -92,30 +82,20 @@
         <!--表格渲染-->
         <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
-          <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
-          <el-table-column :show-overflow-tooltip="true" prop="realName" label="真实姓名" />
+          <el-table-column :show-overflow-tooltip="true" prop="userName" label="用户名" />
           <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
           <el-table-column prop="gender" label="性别" :formatter="function(row, column, cellValue, index){return cellValue == 1 ? '男' : '女'}" />
           <el-table-column prop="authMethod" label="认证方式" :formatter="function(row, column, cellValue, index){return cellValue == 1 ? '用户口令' : 'USBKEY'}" />
-          <el-table-column prop="role.name" label="用户类型" />
-          <el-table-column :show-overflow-tooltip="true" prop="tel" width="100" label="电话" />
+          <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
           <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
-          <el-table-column label="状态" align="center" prop="enabled" />
-          <el-table-column :show-overflow-tooltip="true" prop="pwdResetTime" width="135" label="修改密码时间" />
-          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="135" label="创建日期" />
-          <el-table-column
-            v-if="checkPer(['admin','user:edit','user:del'])"
-            label="操作"
-            width="115"
-            align="center"
-            fixed="right"
-          >
+          <el-table-column label="状态" align="center" prop="enabled" >
             <template slot-scope="scope">
-              <udOperation
-                :data="scope.row"
-                :permission="permission"
-                :disabled-dle="scope.row.id === user.id"
-              />
+              <p v-if="scope.row.enabled">
+                  启用
+              </p>
+              <p v-else>
+                禁用
+              </p>
             </template>
           </el-table-column>
         </el-table>
@@ -131,22 +111,22 @@ import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
 import { getAll } from '@/api/system/role'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
+import store from '@/store'
 import { mapGetters } from 'vuex'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 let userRoles = {}
 const defaultForm = { id: null, username: null, nickName: null, gender: '男', email: null, enabled: 'false', roles: [], phone: null }
 export default {
   name: 'User',
-  components: { crudOperation, rrOperation, udOperation, pagination },
+  components: { crudOperation, udOperation, pagination },
   cruds() {
     return CRUD({ title: '用户', url: 'api/users', crudMethod: { ...crudUser }, optShow: {
-      add: true,
+      add: false,
       download: false,
-      reset: true
+      reset: false
     }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
@@ -163,6 +143,7 @@ export default {
       }
     }
     return {
+      currentUser : store.getters.user,
       height: document.documentElement.clientHeight - 180 + 'px;',
       roles: [], menuIds: [], menus: [],
       roleDatas: null,
@@ -261,7 +242,21 @@ export default {
     // 获取权限级别
     checkboxT(row, rowIndex) {
       return row.id !== this.user.id
-    }
+    },
+    getCookie() {
+      const username = Cookies.get('username')
+      let password = Cookies.get('phone')
+      const rememberMe = Cookies.get('rememberMe')
+      // 保存cookie里面的加密后的密码
+      this.cookiePass = password === undefined ? '' : password
+      password = password === undefined ? this.loginForm.password : password
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password,
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+        code: ''
+      }
+    },
   }
 }
 </script>

@@ -9,9 +9,12 @@ public class UserLoginDto {
 
     private Long id;
     private String userName;
+    private String email;
+    private String phone;
     private String password;
     private Boolean enabled;
     private Boolean adminFlag;
+
 
     public boolean isAdmin(){
         return adminFlag;

@@ -1,5 +1,11 @@
 server:
   port: 8080
+#  port: 443
+#  ssl:
+#    key-store: classpath:server.keystore
+#    key-store-password: 123456
+#    keyStoreType: JKS
+#    keyAlias: serverkey
 spring:
   profiles:
     active: dev

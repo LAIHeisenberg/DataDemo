@@ -1,6 +1,5 @@
 package com.longmai.datademo.utils;
 
-import com.bluebuck.ceres.common.enums.TimeZoneEnum;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -37,7 +36,7 @@ public class TimeZoneUtil {
     	if (Objects.isNull(date)) {
     		return null;
     	}
-    	return dateToStrTimeZone(date, TimeZoneEnum.CHINESE);
+    	return dateToStrTimeZone(date);
     }
 
     /**
@@ -49,7 +48,7 @@ public class TimeZoneUtil {
         if (Objects.isNull(date)) {
             return null;
         }
-        return dateToStrTimeZone(date, TimeZoneEnum.CHINESE, dateFormat);
+        return dateToStrTimeZone(date, dateFormat);
     }
 
     /**
@@ -61,7 +60,7 @@ public class TimeZoneUtil {
     	if (Objects.isNull(localDate)) {
     		return null;
     	}
-    	return  new DateTime(localDate, DateTimeZone.forID(TimeZoneEnum.CHINESE.getValue())).toString(format);
+    	return  new DateTime(localDate, DateTimeZone.forID("+8")).toString(format);
 
     }
 
@@ -88,7 +87,7 @@ public class TimeZoneUtil {
             return null;
         }
         Long ms = timeUnit.toMillis(timestamp);
-        return new DateTime(ms, DateTimeZone.forID(TimeZoneEnum.CHINESE.getValue())).toString(format);
+        return new DateTime(ms, DateTimeZone.forID("+8")).toString(format);
     }
 
     /**
@@ -97,7 +96,7 @@ public class TimeZoneUtil {
      * @return
      */
     public static String getCurrentMilliSecond(){
-        return new DateTime(DateTime.now(), DateTimeZone.forID(TimeZoneEnum.CHINESE.getValue())).toString(TimeZoneUtil.yyyyMMddHHmmssSSS);
+        return new DateTime(DateTime.now(), DateTimeZone.forID("+8")).toString(TimeZoneUtil.yyyyMMddHHmmssSSS);
     }
 
 
@@ -160,7 +159,7 @@ public class TimeZoneUtil {
         if (!StringUtils.hasText(chineseDateStr)) {
             return null;
         }
-        DateTime parse = DateTime.parse(chineseDateStr, DateTimeFormat.forPattern(format).withZone(DateTimeZone.forID(TimeZoneEnum.CHINESE.getValue())));
+        DateTime parse = DateTime.parse(chineseDateStr, DateTimeFormat.forPattern(format).withZone(DateTimeZone.forID("+8")));
         return parse.toDate();
     }
 
@@ -199,12 +198,12 @@ public class TimeZoneUtil {
         return localDate == null ? null : timeUnit.convert(localDate.getTime(), TimeUnit.MILLISECONDS);
     }
 
-    public static String dateToStrTimeZone(Date date, TimeZoneEnum zone) {
-        return new DateTime(date, DateTimeZone.forID(zone.getValue())).toString(yyyy_MM_dd_HH_mm_ss);
+    public static String dateToStrTimeZone(Date date) {
+        return new DateTime(date, DateTimeZone.forID("+8")).toString(yyyy_MM_dd_HH_mm_ss);
     }
 
-    public static String dateToStrTimeZone(Date date, TimeZoneEnum zone, String format) {
-        return new DateTime(date, DateTimeZone.forID(zone.getValue())).toString(format);
+    public static String dateToStrTimeZone(Date date, String format) {
+        return new DateTime(date, DateTimeZone.forID("+8")).toString(format);
     }
 
 

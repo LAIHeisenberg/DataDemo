@@ -19,6 +19,7 @@ public class UserController {
     @PreAuthorize("@el.check('user:list')")
     @GetMapping
     public ResponseEntity<Object> listAllUser(){
+
         return new ResponseEntity<>(userFacade.listAllUser(), HttpStatus.OK);
     }
 

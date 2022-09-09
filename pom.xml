@@ -136,7 +136,11 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>3.5.2</version>
             </dependency>
-
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.11.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

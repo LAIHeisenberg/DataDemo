@@ -88,6 +88,7 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
+      // return this.$router.resolve({ path: '/users/:id?' })
       return path.resolve(this.basePath, routePath)
     }
   }
