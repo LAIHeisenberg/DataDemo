@@ -1,8 +1,6 @@
 package com.longmai.datademo.utils;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
+
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
@@ -32,37 +30,37 @@ public class TimeZoneUtil {
      * @param date
      * @return
      */
-    public static String localDate2ChineseDateStr(Date date) {
-    	if (Objects.isNull(date)) {
-    		return null;
-    	}
-    	return dateToStrTimeZone(date);
-    }
+//    public static String localDate2ChineseDateStr(Date date) {
+//    	if (Objects.isNull(date)) {
+//    		return null;
+//    	}
+//    	return dateToStrTimeZone(date);
+//    }
 
     /**
      * 将系统本地时间转换成中国时间
      * @param date
      * @return
      */
-    public static String localDate2ChineseDateStrFormat(Date date, String dateFormat) {
-        if (Objects.isNull(date)) {
-            return null;
-        }
-        return dateToStrTimeZone(date, dateFormat);
-    }
+//    public static String localDate2ChineseDateStrFormat(Date date, String dateFormat) {
+//        if (Objects.isNull(date)) {
+//            return null;
+//        }
+//        return dateToStrTimeZone(date, dateFormat);
+//    }
 
     /**
      * 将系统本地时间转换成中国时间
      * @param localDate
      * @return
      */
-    public static String localDate2ChineseDateStr(Date localDate, String format) {
-    	if (Objects.isNull(localDate)) {
-    		return null;
-    	}
-    	return  new DateTime(localDate, DateTimeZone.forID("+8")).toString(format);
-
-    }
+//    public static String localDate2ChineseDateStr(Date localDate, String format) {
+//    	if (Objects.isNull(localDate)) {
+//    		return null;
+//    	}
+//    	return  new DateTime(localDate, DateTimeZone.forID("+8")).toString(format);
+//
+//    }
 
     /**
      * 将时间戳转换成中国时间
@@ -70,9 +68,9 @@ public class TimeZoneUtil {
      * @param timeUnit
      * @return
      */
-    public static String timestamp2ChineseDateStr(Long timestamp, TimeUnit timeUnit) {
-        return timestamp2ChineseDateStr(timestamp, timeUnit, yyyy_MM_dd_HH_mm_ss);
-    }
+//    public static String timestamp2ChineseDateStr(Long timestamp, TimeUnit timeUnit) {
+//        return timestamp2ChineseDateStr(timestamp, timeUnit, yyyy_MM_dd_HH_mm_ss);
+//    }
 
     /**
      * 将时间戳转换成中国时间
@@ -82,33 +80,33 @@ public class TimeZoneUtil {
      * @param format    格式
      * @author wuqiong 2019-07-17 12:03
      */
-    public static String timestamp2ChineseDateStr(Long timestamp, TimeUnit timeUnit, String format) {
-        if (Objects.isNull(timestamp)) {
-            return null;
-        }
-        Long ms = timeUnit.toMillis(timestamp);
-        return new DateTime(ms, DateTimeZone.forID("+8")).toString(format);
-    }
+//    public static String timestamp2ChineseDateStr(Long timestamp, TimeUnit timeUnit, String format) {
+//        if (Objects.isNull(timestamp)) {
+//            return null;
+//        }
+//        Long ms = timeUnit.toMillis(timestamp);
+//        return new DateTime(ms, DateTimeZone.forID("+8")).toString(format);
+//    }
 
     /**
      * 获取当前毫秒值
      * 例如：20211119171159890
      * @return
      */
-    public static String getCurrentMilliSecond(){
-        return new DateTime(DateTime.now(), DateTimeZone.forID("+8")).toString(TimeZoneUtil.yyyyMMddHHmmssSSS);
-    }
+//    public static String getCurrentMilliSecond(){
+//        return new DateTime(DateTime.now(), DateTimeZone.forID("+8")).toString(TimeZoneUtil.yyyyMMddHHmmssSSS);
+//    }
 
 
 
-    public static void main(String[] args) {
-        String currntTimeStr = TimeZoneUtil.timestamp2ChineseDateStr(Instant.now().getEpochSecond(),
-                TimeUnit.SECONDS, TimeZoneUtil.yyyyMMddHHmmss);
+//    public static void main(String[] args) {
+//        String currntTimeStr = TimeZoneUtil.timestamp2ChineseDateStr(Instant.now().getEpochSecond(),
+//                TimeUnit.SECONDS, TimeZoneUtil.yyyyMMddHHmmss);
 
-        System.out.println("currntTimeStr = " + currntTimeStr);
+//        System.out.println("currntTimeStr = " + currntTimeStr);
 
         //System.out.println(timestamp2ChineseDateStr(System.currentTimeMillis(), TimeUnit.MILLISECONDS, yyyyMMdd));
-        System.out.println(timestamp2ChineseDateStr(System.currentTimeMillis(), TimeUnit.MILLISECONDS, yyyy_MM_dd_HH_mm_ss));
+//        System.out.println(timestamp2ChineseDateStr(System.currentTimeMillis(), TimeUnit.MILLISECONDS, yyyy_MM_dd_HH_mm_ss));
 
 //    	chineseDateStr2LocalDate(String)
 //    	chineseDateStr2LocalDateStr(String)
@@ -126,7 +124,8 @@ public class TimeZoneUtil {
 //		Date todayMorningOfChinese = TimeZoneUtil.chineseDateStr2LocalDate("2019-06-29 00:00:00");
 //		String str = new DateTime().toString("yyyy-MM-dd HH:mm:ss", Locale.US);
 //        System.out.println(str);
-    }
+//    }
+
 //
 //    /**
 //     * 将系统本地时间转换成中国时间
@@ -146,35 +145,35 @@ public class TimeZoneUtil {
      * @param chineseDateStr: 中国时间 yyyy-MM-dd HH:mm:ss
      * @return
      */
-    public static Date chineseDateStr2LocalDate(String chineseDateStr) {
-        return chineseDateStr2LocalDate(chineseDateStr, yyyy_MM_dd_HH_mm_ss);
-    }
+//    public static Date chineseDateStr2LocalDate(String chineseDateStr) {
+//        return chineseDateStr2LocalDate(chineseDateStr, yyyy_MM_dd_HH_mm_ss);
+//    }
 
     /**
      * 将中国时间转换成系统本地时间
      * @param chineseDateStr: 中国时间 yyyy-MM-dd HH:mm:ss
      * @return
      */
-    public static Date chineseDateStr2LocalDate(String chineseDateStr, String format) {
-        if (!StringUtils.hasText(chineseDateStr)) {
-            return null;
-        }
-        DateTime parse = DateTime.parse(chineseDateStr, DateTimeFormat.forPattern(format).withZone(DateTimeZone.forID("+8")));
-        return parse.toDate();
-    }
+//    public static Date chineseDateStr2LocalDate(String chineseDateStr, String format) {
+//        if (!StringUtils.hasText(chineseDateStr)) {
+//            return null;
+//        }
+//        DateTime parse = DateTime.parse(chineseDateStr, DateTimeFormat.forPattern(format).withZone(DateTimeZone.forID("+8")));
+//        return parse.toDate();
+//    }
 
     /**
      * 将中国时间转换成系统本地时间
      * @param chineseDateStr: 中国时间 yyyy-MM-dd HH:mm:ss
      * @return
      */
-    public static String chineseDateStr2LocalDateStr(String chineseDateStr) {
-        if (Objects.isNull(chineseDateStr)) {
-            return null;
-        }
-        Date localDate = TimeZoneUtil.chineseDateStr2LocalDate(chineseDateStr);
-        return new DateTime(localDate).toString(yyyy_MM_dd_HH_mm_ss);
-    }
+//    public static String chineseDateStr2LocalDateStr(String chineseDateStr) {
+//        if (Objects.isNull(chineseDateStr)) {
+//            return null;
+//        }
+//        Date localDate = TimeZoneUtil.chineseDateStr2LocalDate(chineseDateStr);
+//        return new DateTime(localDate).toString(yyyy_MM_dd_HH_mm_ss);
+//    }
 
     /**
      * 将中国时间转换成时间戳
@@ -182,10 +181,10 @@ public class TimeZoneUtil {
      * @param timeUnit
      * @return
      */
-    public static Long chineseDateStr2Timestamp(String chineseDateStr, TimeUnit timeUnit) {
-        Date localDate = TimeZoneUtil.chineseDateStr2LocalDate(chineseDateStr);
-        return timeUnit.convert(localDate.getTime(), TimeUnit.MILLISECONDS);
-    }
+//    public static Long chineseDateStr2Timestamp(String chineseDateStr, TimeUnit timeUnit) {
+//        Date localDate = TimeZoneUtil.chineseDateStr2LocalDate(chineseDateStr);
+//        return timeUnit.convert(localDate.getTime(), TimeUnit.MILLISECONDS);
+//    }
 
     /**
      * 将中国时间转换成时间戳
@@ -193,18 +192,18 @@ public class TimeZoneUtil {
      * @param timeUnit
      * @return
      */
-    public static Long chineseDateStr2Timestamp(String chineseDateStr, TimeUnit timeUnit, String format) {
-        Date localDate = TimeZoneUtil.chineseDateStr2LocalDate(chineseDateStr, format);
-        return localDate == null ? null : timeUnit.convert(localDate.getTime(), TimeUnit.MILLISECONDS);
-    }
+//    public static Long chineseDateStr2Timestamp(String chineseDateStr, TimeUnit timeUnit, String format) {
+//        Date localDate = TimeZoneUtil.chineseDateStr2LocalDate(chineseDateStr, format);
+//        return localDate == null ? null : timeUnit.convert(localDate.getTime(), TimeUnit.MILLISECONDS);
+//    }
 
-    public static String dateToStrTimeZone(Date date) {
-        return new DateTime(date, DateTimeZone.forID("+8")).toString(yyyy_MM_dd_HH_mm_ss);
-    }
+//    public static String dateToStrTimeZone(Date date) {
+//        return new DateTime(date, DateTimeZone.forID("+8")).toString(yyyy_MM_dd_HH_mm_ss);
+//    }
 
-    public static String dateToStrTimeZone(Date date, String format) {
-        return new DateTime(date, DateTimeZone.forID("+8")).toString(format);
-    }
+//    public static String dateToStrTimeZone(Date date, String format) {
+//        return new DateTime(date, DateTimeZone.forID("+8")).toString(format);
+//    }
 
 
 }

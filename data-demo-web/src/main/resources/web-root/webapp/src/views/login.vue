@@ -2,7 +2,7 @@
   <div class="login" :style="'background-image:url('+ Background +');'">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
-        Cipherkeeper 管理系统
+        DataDemo 管理系统
       </h3>
       <el-tabs type="border-card" @tab-click="handleTabClick">
         <el-tab-pane label="用户密码登陆">
@@ -24,9 +24,6 @@
               <img :src="codeUrl" @click="getCode">
             </div>
           </el-form-item>
-          <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
-            记住我
-          </el-checkbox>
           <el-form-item style="width:100%;">
             <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
               <span v-if="!loading">登 录</span>
@@ -34,7 +31,7 @@
             </el-button>
           </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="USBKEY登陆">
+        <!-- <el-tab-pane label="USBKEY登陆">
           <el-form-item prop="deviceNo">
             <el-input v-model="loginForm.deviceNo" type="text" auto-complete="off" :disabled="true" placeholder="UKEY设备号">
               <svg-icon slot="prefix" icon-class="usb" class="el-input__icon input-icon" />
@@ -55,7 +52,7 @@
               <span v-else>登 录 中...</span>
             </el-button>
           </el-form-item>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </el-form>
     <!--  底部  -->
@@ -87,7 +84,6 @@ export default {
       loginForm: {
         username: '',
         password: '',
-        rememberMe: false,
         code: '',
         uuid: '',
         deviceNo : null,
@@ -146,14 +142,12 @@ export default {
     getCookie() {
       const username = Cookies.get('username')
       let password = Cookies.get('password')
-      const rememberMe = Cookies.get('rememberMe')
       // 保存cookie里面的加密后的密码
       this.cookiePass = password === undefined ? '' : password
       password = password === undefined ? this.loginForm.password : password
       this.loginForm = {
         username: username === undefined ? this.loginForm.username : username,
         password: password,
-        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
         code: ''
       }
     },
@@ -174,7 +168,6 @@ export default {
         const user = {
           username: parentThis.loginForm.username,
           password: parentThis.loginForm.password,
-          rememberMe: parentThis.loginForm.rememberMe,
           code: parentThis.loginForm.code,
           uuid: parentThis.loginForm.uuid,
           sign : parentThis.loginForm.sign,
@@ -187,15 +180,6 @@ export default {
         }
         if (valid) {
           this.loading = true
-          if (user.rememberMe) {
-            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
-            Cookies.set('password', user.password, { expires: Config.passCookieExpires })
-            Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
-          } else {
-            Cookies.remove('username')
-            Cookies.remove('password')
-            Cookies.remove('rememberMe')
-          }
           this.$store.dispatch('Login', user).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
