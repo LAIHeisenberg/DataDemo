@@ -33,6 +33,14 @@
             <groupId>org.bgee.log4jdbc-log4j2</groupId>
             <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>     <!-- 自定义即可 -->
+            <artifactId>javassist</artifactId>    <!-- jar名称 -->
+            <version>3.29.2-GA</version>          <!-- 如果jar包未指定自定义即可-->
+            <type>jar</type>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/javassist-3.9.0.jar</systemPath>    <!-- 使用jar所在的绝对路径 -->
+        </dependency>
     </dependencies>
 
 </project>
