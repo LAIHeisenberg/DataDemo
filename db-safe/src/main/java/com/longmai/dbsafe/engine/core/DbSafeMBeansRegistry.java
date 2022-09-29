@@ -26,16 +26,16 @@ public class DbSafeMBeansRegistry {
 
   private final Collection<ObjectName> mBeans = new ArrayList<ObjectName>();
 
-  public static final String PACKAGE_NAME = "com.p6spy";
+  public static final String PACKAGE_NAME = "com.dbsafe";
   
   public void registerMBeans(Collection<DbSafeLoadableOptions> allOptions) throws MBeanRegistrationException, InstanceNotFoundException, MalformedObjectNameException, NotCompliantMBeanException {
     boolean jmx = true; 
     String jmxPrefix = "";
     
     for (DbSafeLoadableOptions options : allOptions) {
-      if (options instanceof DbSafeSpyOptions) {
-        jmx = ((DbSafeSpyOptions) options).getJmx();
-        jmxPrefix = ((DbSafeSpyOptions) options).getJmxPrefix();
+      if (options instanceof DbSafeImplOptions) {
+        jmx = ((DbSafeImplOptions) options).getJmx();
+        jmxPrefix = ((DbSafeImplOptions) options).getJmxPrefix();
         break;
       }
     }

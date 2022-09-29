@@ -19,8 +19,8 @@ package com.longmai.dbsafe.engine.core.option;
 
 
 import com.longmai.dbsafe.engine.core.DbSafeModuleManager;
-import com.longmai.dbsafe.engine.core.DbSafeSpyLoadableOptions;
-import com.longmai.dbsafe.engine.core.DbSafeSpyOptions;
+import com.longmai.dbsafe.engine.core.DbSafeImplLoadableOptions;
+import com.longmai.dbsafe.engine.core.DbSafeImplOptions;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,7 +36,7 @@ public class DbSafeDotPropertiesReloader implements DbSafeOptionChangedListener 
                                      DbSafeModuleManager dbSafeModuleManager) {
     this.dbSafeDotProperties = dbSafeDotProperties;
     
-    final DbSafeSpyLoadableOptions spyOptions = dbSafeModuleManager.getOptions(DbSafeSpyOptions.class);
+    final DbSafeImplLoadableOptions spyOptions = dbSafeModuleManager.getOptions(DbSafeImplOptions.class);
     reschedule(spyOptions.getReloadProperties(), spyOptions.getReloadPropertiesInterval());
     
     dbSafeModuleManager.registerOptionChangedListener(this);
@@ -89,10 +89,10 @@ public class DbSafeDotPropertiesReloader implements DbSafeOptionChangedListener 
 
   @Override
   public void optionChanged(String key, Object oldValue, Object newValue) {
-    if (key.equals(DbSafeSpyOptions.RELOADPROPERTIES)) {
-      reschedule(Boolean.valueOf(newValue.toString()), DbSafeSpyOptions.getActiveInstance().getReloadPropertiesInterval());
-    } else if (key.equals(DbSafeSpyOptions.RELOADPROPERTIESINTERVAL)) {
-      reschedule(DbSafeSpyOptions.getActiveInstance().getReloadProperties(), (Long) newValue);
+    if (key.equals(DbSafeImplOptions.RELOADPROPERTIES)) {
+      reschedule(Boolean.valueOf(newValue.toString()), DbSafeImplOptions.getActiveInstance().getReloadPropertiesInterval());
+    } else if (key.equals(DbSafeImplOptions.RELOADPROPERTIESINTERVAL)) {
+      reschedule(DbSafeImplOptions.getActiveInstance().getReloadProperties(), (Long) newValue);
     }
   }
 

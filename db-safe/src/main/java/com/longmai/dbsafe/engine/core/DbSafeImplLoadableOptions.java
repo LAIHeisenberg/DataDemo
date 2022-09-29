@@ -23,7 +23,7 @@ import com.longmai.dbsafe.engine.core.appender.MessageFormattingStrategy;
 
 import java.util.Set;
 
-public interface DbSafeSpyLoadableOptions extends DbSafeLoadableOptions, DbSafeOptionsMBean {
+public interface DbSafeImplLoadableOptions extends DbSafeLoadableOptions, DbSafeOptionsMBean {
   
   public Set<DbSafeFactory> getModuleFactories();
 

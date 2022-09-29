@@ -25,7 +25,7 @@ public class DbSafeImlFactory implements DbSafeFactory {
 
   @Override
   public DbSafeLoadableOptions getOptions(DbSafeOptionsRepository optionsRepository) {
-    return new DbSafeSpyOptions(optionsRepository);
+    return new DbSafeImplOptions(optionsRepository);
   }
 
   @Override

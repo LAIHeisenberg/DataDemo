@@ -73,10 +73,10 @@ public class DbSafeModuleManager {
       optionsSource.preDestroy(instance);
     }
 
-    if (DbSafeSpyOptions.getActiveInstance().getJmx() //
+    if (DbSafeImplOptions.getActiveInstance().getJmx() //
       // unregister mbeans (to prevent naming conflicts)
       && instance.mBeansRegistry != null) {
-        instance.mBeansRegistry.unregisterAllMBeans(DbSafeSpyOptions.getActiveInstance().getJmxPrefix());
+        instance.mBeansRegistry.unregisterAllMBeans(DbSafeImplOptions.getActiveInstance().getJmxPrefix());
     }
     
     // clean table plz (we need to make sure that all the configured factories will be re-loaded)
@@ -99,7 +99,7 @@ public class DbSafeModuleManager {
     // make sure the proper listener registration happens
 
     // hard coded - core module init - as it holds initial config
-    final DbSafeSpyLoadableOptions spyOptions = (DbSafeSpyLoadableOptions) registerModule(new DbSafeImlFactory());
+    final DbSafeImplLoadableOptions spyOptions = (DbSafeImplLoadableOptions) registerModule(new DbSafeImlFactory());
     loadDriversExplicitly(spyOptions);
 
     // configured modules init
@@ -177,7 +177,7 @@ public class DbSafeModuleManager {
     e.printStackTrace(System.err);
   }
 
-	private void loadDriversExplicitly(DbSafeSpyLoadableOptions spyOptions) {
+	private void loadDriversExplicitly(DbSafeImplLoadableOptions spyOptions) {
 		final Collection<String> driverNames = spyOptions.getDriverNames();
 		if (null != driverNames) {
 			for (String driverName : driverNames) {

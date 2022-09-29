@@ -17,7 +17,7 @@
  */
 package com.longmai.dbsafe.engine.common;
 
-import com.longmai.dbsafe.engine.core.DbSafeSpyOptions;
+import com.longmai.dbsafe.engine.core.DbSafeImplOptions;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -94,11 +94,11 @@ public class Value {
 //          result = value.toString();
 //        }
       } else if (value instanceof Timestamp) {
-        result = new SimpleDateFormat(DbSafeSpyOptions.getActiveInstance().getDatabaseDialectTimestampFormat()).format(value);
+        result = new SimpleDateFormat(DbSafeImplOptions.getActiveInstance().getDatabaseDialectTimestampFormat()).format(value);
       } else if (value instanceof Date) {
-        result = new SimpleDateFormat(DbSafeSpyOptions.getActiveInstance().getDatabaseDialectDateFormat()).format(value);
+        result = new SimpleDateFormat(DbSafeImplOptions.getActiveInstance().getDatabaseDialectDateFormat()).format(value);
       } else if (value instanceof Boolean) {
-        if ("numeric".equals(DbSafeSpyOptions.getActiveInstance().getDatabaseDialectBooleanFormat())) {
+        if ("numeric".equals(DbSafeImplOptions.getActiveInstance().getDatabaseDialectBooleanFormat())) {
           result = Boolean.FALSE.equals(value) ? "0" : "1";
         } else {
           result = value.toString();

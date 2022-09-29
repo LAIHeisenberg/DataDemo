@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class DbSafeSpyOptions extends StandardMBean implements DbSafeSpyLoadableOptions {
+public class DbSafeImplOptions extends StandardMBean implements DbSafeImplLoadableOptions {
 
     public static final String AUTOFLUSH = "autoflush";
     public static final String DRIVERLIST = "driverlist";
@@ -88,7 +88,7 @@ public class DbSafeSpyOptions extends StandardMBean implements DbSafeSpyLoadable
 
     private final DbSafeOptionsRepository optionsRepository;
 
-    public DbSafeSpyOptions(final DbSafeOptionsRepository optionsRepository) {
+    public DbSafeImplOptions(final DbSafeOptionsRepository optionsRepository) {
       super(DbSafeOptionsMBean.class, false);
       this.optionsRepository = optionsRepository;
     }
@@ -125,10 +125,10 @@ public class DbSafeSpyOptions extends StandardMBean implements DbSafeSpyLoadable
     /**
      * Utility method, to make accessing options from app less verbose.
      * 
-     * @return active instance of the {@link DbSafeSpyLoadableOptions}
+     * @return active instance of the {@link DbSafeImplLoadableOptions}
      */
-    public static DbSafeSpyLoadableOptions getActiveInstance() {
-      return DbSafeModuleManager.getInstance().getOptions(DbSafeSpyOptions.class);
+    public static DbSafeImplLoadableOptions getActiveInstance() {
+      return DbSafeModuleManager.getInstance().getOptions(DbSafeImplOptions.class);
     }
 
     // JMX exporsed API

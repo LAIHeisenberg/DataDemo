@@ -46,7 +46,7 @@ public class DbSafeDriver implements Driver {
 
   @Override
   public boolean acceptsURL(final String url) {
-    return url != null && url.startsWith("jdbc:p6spy:");
+    return url != null && url.startsWith("jdbc:dbsafe:");
   }
 
   /**
@@ -56,7 +56,7 @@ public class DbSafeDriver implements Driver {
    * @return the parsed URL
    */
   private String extractRealUrl(String url) {
-    return acceptsURL(url) ? url.replace("p6spy:", "") : url;
+    return acceptsURL(url) ? url.replace("dbsafe:", "") : url;
   }
 
   static List<Driver> registeredDrivers() {

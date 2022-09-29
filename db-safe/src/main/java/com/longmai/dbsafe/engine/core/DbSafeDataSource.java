@@ -92,7 +92,7 @@ public class DbSafeDataSource implements DataSource, ConnectionPoolDataSource, X
       return;
     }
 
-    final DbSafeSpyLoadableOptions options = DbSafeSpyOptions.getActiveInstance();
+    final DbSafeImplLoadableOptions options = DbSafeImplOptions.getActiveInstance();
 
     // can be set when object is bound to JNDI, or
     // can be loaded from DbSafe.properties

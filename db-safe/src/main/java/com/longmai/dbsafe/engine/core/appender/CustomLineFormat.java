@@ -18,7 +18,7 @@
 package com.longmai.dbsafe.engine.core.appender;
 
 import com.longmai.dbsafe.engine.common.DbSafeUtil;
-import com.longmai.dbsafe.engine.core.DbSafeSpyOptions;
+import com.longmai.dbsafe.engine.core.DbSafeImplOptions;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,7 +56,7 @@ public class CustomLineFormat implements MessageFormattingStrategy {
   @Override
   public String formatMessage(final int connectionId, final String now, final long elapsed, final String category, final String prepared, final String sql, final String url) {
 
-    String customLogMessageFormat = DbSafeSpyOptions.getActiveInstance().getCustomLogMessageFormat();
+    String customLogMessageFormat = DbSafeImplOptions.getActiveInstance().getCustomLogMessageFormat();
 
     if (customLogMessageFormat == null) {
       // Someone forgot to configure customLogMessageFormat: fall back to built-in
