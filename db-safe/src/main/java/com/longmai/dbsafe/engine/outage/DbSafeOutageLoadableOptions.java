@@ -18,7 +18,7 @@
 package com.longmai.dbsafe.engine.outage;
 
 
-import com.longmai.dbsafe.engine.dbsafe.DbSafeLoadableOptions;
+import com.longmai.dbsafe.engine.core.DbSafeLoadableOptions;
 
 public interface DbSafeOutageLoadableOptions extends DbSafeLoadableOptions, DbSafeOutageOptionsMBean {
 

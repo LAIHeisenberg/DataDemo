@@ -15,24 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.outage;
+package com.longmai.dbsafe.engine.core;
 
+public class DbSafeDriverNotFoundError extends Error {
 
-import com.longmai.dbsafe.engine.event.JdbcEventListener;
-import com.longmai.dbsafe.engine.core.option.DbSafeOptionsRepository;
-import com.longmai.dbsafe.engine.core.DbSafeFactory;
-import com.longmai.dbsafe.engine.core.DbSafeLoadableOptions;
-
-public class DbSafeOutageFactory implements DbSafeFactory {
-
-  @Override
-  public JdbcEventListener getJdbcEventListener() {
-    return OutageJdbcEventListener.INSTANCE;
-  }
-
-  @Override
-  public DbSafeLoadableOptions getOptions(DbSafeOptionsRepository optionsRepository) {
-    return new DbSafeOutageOptions(optionsRepository);
+  public DbSafeDriverNotFoundError(String message) {
+    super(message);
   }
 
 }

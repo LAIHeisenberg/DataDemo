@@ -18,8 +18,6 @@
 package com.longmai.dbsafe.engine.common;
 
 
-import com.longmai.dbsafe.engine.logging.Category;
-
 import java.sql.ResultSet;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -48,7 +46,6 @@ public class ResultSetInformation implements Loggable {
    */
   public void generateLogMessage() {
     if (lastRowLogged != currRow) {
-      DbSafeLogQuery.log(Category.RESULTSET, this);
       lastRowLogged = currRow;
     }
   }

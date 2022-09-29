@@ -41,7 +41,6 @@ public class DbSafeUtil {
             return (Integer.parseInt(i));
         }
         catch(NumberFormatException nfe) {
-            DbSafeLogQuery.error("NumberFormatException occured parsing value "+i);
             return defaultValue;
         }
     }

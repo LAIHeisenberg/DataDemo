@@ -15,24 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.outage;
+package com.longmai.dbsafe.engine.core;
 
 
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
-import com.longmai.dbsafe.engine.core.option.DbSafeOptionsRepository;
-import com.longmai.dbsafe.engine.core.DbSafeFactory;
-import com.longmai.dbsafe.engine.core.DbSafeLoadableOptions;
 
-public class DbSafeOutageFactory implements DbSafeFactory {
+/**
+ * Factory for creating the {@link JdbcEventListener}.
+ * 
+ * @author Peter Butkovic
+ * @since 3.3.0
+ */
+public interface JdbcEventListenerFactory {
 
-  @Override
-  public JdbcEventListener getJdbcEventListener() {
-    return OutageJdbcEventListener.INSTANCE;
-  }
-
-  @Override
-  public DbSafeLoadableOptions getOptions(DbSafeOptionsRepository optionsRepository) {
-    return new DbSafeOutageOptions(optionsRepository);
-  }
-
+  JdbcEventListener createJdbcEventListener();
+  
 }

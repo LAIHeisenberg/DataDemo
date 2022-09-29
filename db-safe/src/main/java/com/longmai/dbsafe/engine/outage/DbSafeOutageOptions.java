@@ -18,8 +18,8 @@
 package com.longmai.dbsafe.engine.outage;
 
 
-import com.longmai.dbsafe.engine.dbsafe.option.DbSafeOptionsRepository;
-import com.longmai.dbsafe.engine.dbsafe.DbSafeModuleManager;
+import com.longmai.dbsafe.engine.core.option.DbSafeOptionsRepository;
+import com.longmai.dbsafe.engine.core.DbSafeModuleManager;
 
 import javax.management.StandardMBean;
 import java.util.HashMap;

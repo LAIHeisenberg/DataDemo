@@ -18,12 +18,11 @@
 package com.longmai.dbsafe.engine.wrapper;
 
 
-import com.longmai.dbsafe.engine.common.PreparedStatementInformation;
-import com.longmai.dbsafe.engine.event.JdbcEventListener;
 import com.longmai.dbsafe.engine.common.CallableStatementInformation;
 import com.longmai.dbsafe.engine.common.ConnectionInformation;
+import com.longmai.dbsafe.engine.common.PreparedStatementInformation;
 import com.longmai.dbsafe.engine.common.StatementInformation;
-import com.longmai.dbsafe.engine.proxy.ProxyFactory;
+import com.longmai.dbsafe.engine.event.JdbcEventListener;
 
 import java.sql.*;
 import java.util.Map;
@@ -49,14 +48,14 @@ public class ConnectionWrapper extends AbstractWrapper implements Connection {
     if (delegate == null) {
       return null;
     }
-  //  final ConnectionWrapper connectionWrapper = new ConnectionWrapper(delegate, eventListener, connectionInformation);
-
     final ConnectionWrapper connectionWrapper = new ConnectionWrapper(delegate, eventListener, connectionInformation);
-    ProxyFactory proxyFactory = new ProxyFactory(connectionWrapper);
-    ConnectionWrapper connectionWrapperProxy = (ConnectionWrapper)proxyFactory.getProxyInstance(
-            new Class[]{Connection.class, JdbcEventListener.class,ConnectionInformation.class},new Object[]{delegate,eventListener,connectionInformation});
-    eventListener.onConnectionWrapped(connectionInformation);
-    return connectionWrapperProxy;
+    return connectionWrapper;
+//    final ConnectionWrapper connectionWrapper = new ConnectionWrapper(delegate, eventListener, connectionInformation);
+//    ProxyFactory proxyFactory = new ProxyFactory(connectionWrapper);
+//    ConnectionWrapper connectionWrapperProxy = (ConnectionWrapper)proxyFactory.getProxyInstance(
+//            new Class[]{Connection.class, JdbcEventListener.class,ConnectionInformation.class},new Object[]{delegate,eventListener,connectionInformation});
+//    eventListener.onConnectionWrapped(connectionInformation);
+//    return connectionWrapperProxy;
   }
 
   /**

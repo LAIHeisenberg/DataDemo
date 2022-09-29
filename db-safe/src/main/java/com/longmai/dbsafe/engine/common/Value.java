@@ -17,11 +17,7 @@
  */
 package com.longmai.dbsafe.engine.common;
 
-
-import com.longmai.dbsafe.engine.logging.DbSafeLogLoadableOptions;
-import com.longmai.dbsafe.engine.logging.DbSafeLogOptions;
-import com.longmai.dbsafe.engine.logging.format.BinaryFormat;
-import com.longmai.dbsafe.engine.dbsafe.DbSafeSpyOptions;
+import com.longmai.dbsafe.engine.core.DbSafeSpyOptions;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -72,7 +68,6 @@ public class Value {
    * <li>{@link Date} values it in a way configured via configuration
    * property: {@code dateformat},</li>
    * <li>{@code byte[]} values are converted to {@link String} representation using the configured
-   * database dialect {@link BinaryFormat}, unless configuration property {@code exclidebinary=true} is
    * set.</li>
    * <li>for other types string representation is simply returned.</li>
    * </ul>
@@ -81,24 +76,14 @@ public class Value {
    * @return
    */
   public String convertToString(Object value) {
-    String result;
+    String result=null;
     
     if (value == null) {
       result = "NULL";
     } else {
 
       if (value instanceof byte[]) {
-        // P6LogFactory may not be registered
-        DbSafeLogLoadableOptions logOptions = DbSafeLogOptions.getActiveInstance();
-        if (logOptions != null && logOptions.getExcludebinary()) {
-          result = "[binary]";
-        } else {
-          BinaryFormat binaryFormat = DbSafeSpyOptions.getActiveInstance().getDatabaseDialectBinaryFormatInstance();
-          
-          // return early because BinaryFormat#toString wraps the value in quotes if needed
-          return binaryFormat.toString((byte[]) value);
-        }
-        
+
         // we should not do ((Blob) value).getBinaryStream(). ...
         // as inputstream might not be re-rea
 //      } else  if (value instanceof Blob) {

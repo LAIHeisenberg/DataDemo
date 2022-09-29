@@ -18,9 +18,6 @@
 package com.longmai.dbsafe.engine.outage;
 
 
-import com.longmai.dbsafe.engine.common.DbSafeLogQuery;
-import com.longmai.dbsafe.engine.logging.Category;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -67,9 +64,6 @@ public enum DbSafeOutageDetector implements Runnable {
         Thread outageThread = new Thread(group, this, "P6SpyOutageThread");
         outageThread.setDaemon(true);      
         outageThread.start();
-    	
-        DbSafeLogQuery.debug("P6Spy - P6OutageDetector has been invoked.");
-        DbSafeLogQuery.debug("P6Spy - P6OutageOptions.getOutageDetectionIntervalMS() = " + DbSafeOutageOptions.getActiveInstance().getOutageDetectionIntervalMS());
     }
 
     /**
@@ -118,7 +112,6 @@ public enum DbSafeOutageDetector implements Runnable {
             return;
         }
 
-        DbSafeLogQuery.debug("P6Spy - detectOutage.pendingMessage.size = " + listSize);
 
         long currentTime = System.nanoTime();
         long threshold = TimeUnit.MILLISECONDS.toNanos(DbSafeOutageOptions.getActiveInstance().getOutageDetectionIntervalMS());
@@ -134,14 +127,12 @@ public enum DbSafeOutageDetector implements Runnable {
 
             // has this statement exceeded the threshold?
             if ((currentTime - ii.startTime) > threshold) {
-                DbSafeLogQuery.debug("P6Spy - statement exceeded threshold - check log.");
                 logOutage(ii);
             }
         }
     }
 
     private void logOutage(InvocationInfo ii) {
-        DbSafeLogQuery.logElapsed(-1, System.nanoTime() - ii.startTime, Category.OUTAGE, ii.preparedStmt, ii.sql, ii.url);
     }
 
 }

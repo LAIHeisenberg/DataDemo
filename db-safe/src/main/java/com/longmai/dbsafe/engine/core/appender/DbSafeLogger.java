@@ -15,24 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.outage;
+package com.longmai.dbsafe.engine.core.appender;
 
 
-import com.longmai.dbsafe.engine.event.JdbcEventListener;
-import com.longmai.dbsafe.engine.core.option.DbSafeOptionsRepository;
-import com.longmai.dbsafe.engine.core.DbSafeFactory;
-import com.longmai.dbsafe.engine.core.DbSafeLoadableOptions;
 
-public class DbSafeOutageFactory implements DbSafeFactory {
+public interface DbSafeLogger {
 
-  @Override
-  public JdbcEventListener getJdbcEventListener() {
-    return OutageJdbcEventListener.INSTANCE;
-  }
 
-  @Override
-  public DbSafeLoadableOptions getOptions(DbSafeOptionsRepository optionsRepository) {
-    return new DbSafeOutageOptions(optionsRepository);
-  }
+        /**
+         * Logs the stacktrace of the exception.
+         * 
+         * @param e
+         *            exception holding the stacktrace to be logged.
+         */
+        public void logException(Exception e);
+
+        /**
+         * Logs the text.
+         * 
+         * @param text
+         *            to be logged
+         */
+        public void logText(String text);
 
 }
