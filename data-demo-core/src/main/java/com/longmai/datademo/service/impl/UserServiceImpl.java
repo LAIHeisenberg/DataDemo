@@ -64,4 +64,10 @@ public class UserServiceImpl implements UserService {
         return userLoginDto;
     }
 
+
+    @Override
+    public boolean save(UserPo userPo) {
+        userMapper.insert(userPo);
+        return false;
+    }
 }

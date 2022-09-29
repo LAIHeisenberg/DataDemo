@@ -1,5 +1,6 @@
 package com.longmai.datademo.service;
 
+import com.longmai.datademo.dao.po.UserPo;
 import com.longmai.datademo.dto.UserDto;
 import com.longmai.datademo.dto.UserLoginDto;
 
@@ -13,4 +14,5 @@ public interface UserService {
 
     UserLoginDto getUserLoginDto(String userName);
 
+    boolean save(UserPo userPo);
 }

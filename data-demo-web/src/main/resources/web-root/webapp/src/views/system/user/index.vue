@@ -1,5 +1,10 @@
 <template>
   <div class="app-container">
+    <div class="head-container">
+      <el-row>
+        <crudOperation show="" :permission="permission" />
+      </el-row>
+    </div>
     <el-row :gutter="20">
       <!--侧边部门数据-->
       <el-col :xs="9" :sm="6" :md="5" :lg="4" :xl="4" />
@@ -34,24 +39,24 @@
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" @keydown.native="keydown($event)" />
             </el-form-item>
-            <el-form-item label="真实姓名" prop="realName">
-              <el-input v-model="form.realName" @keydown.native="keydown($event)" />
-            </el-form-item>
-            <el-form-item label="用户类型" prop="userType">
-              <el-select
-                v-model="roleDatas"
-                style="width: 208px"
-                placeholder="请选择"
-                @change="changeRole"
-              >
-                <el-option
-                  v-for="item in roles"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
+<!--            <el-form-item label="真实姓名" prop="realName">-->
+<!--              <el-input v-model="form.realName" @keydown.native="keydown($event)" />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="用户类型" prop="userType">-->
+<!--              <el-select-->
+<!--                v-model="roleDatas"-->
+<!--                style="width: 208px"-->
+<!--                placeholder="请选择"-->
+<!--                @change="changeRole"-->
+<!--              >-->
+<!--                <el-option-->
+<!--                  v-for="item in roles"-->
+<!--                  :key="item.name"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.id"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
             <el-form-item label="认证方式" prop="authMethod">
               <el-radio-group v-model="form.authMethod">
                 <el-radio label="1">用户口令</el-radio>
@@ -62,7 +67,7 @@
               <el-input v-model="form.email" />
             </el-form-item>
             <el-form-item label="电话" prop="tel">
-              <el-input v-model.number="form.tel" />
+              <el-input v-model.number="form.phone" />
             </el-form-item>
             <el-form-item label="昵称" prop="nickName">
               <el-input v-model="form.nickName" @keydown.native="keydown($event)" />
@@ -124,7 +129,7 @@ export default {
   components: { crudOperation, udOperation, pagination },
   cruds() {
     return CRUD({ title: '用户', url: 'api/users', crudMethod: { ...crudUser }, optShow: {
-      add: false,
+      add: true,
       download: false,
       reset: false
     }})
@@ -145,13 +150,13 @@ export default {
     return {
       currentUser : store.getters.user,
       height: document.documentElement.clientHeight - 180 + 'px;',
-      roles: [], menuIds: [], menus: [],
+      roles: [{id:1,name:'A'},{id:2,name:'B'}], menuIds: [], menus: [],
       roleDatas: null,
       defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
       permission: {
-        add: ['admin', 'user:add'],
-        edit: ['admin', 'user:edit'],
-        del: ['admin', 'user:del']
+        // add: ['admin', 'user:add'],
+        // edit: ['admin', 'user:edit'],
+        // del: ['admin', 'user:del']
       },
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
@@ -162,16 +167,16 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
-        realName: [
-          { required: true, message: '请输入真实姓名', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
-        ],
-        authType: [
-          { required: true, message: '请输入真实姓名', trigger: 'blur' }
-        ],
-        userType: [
-          { required: true, message: '请选择用户类型', trigger: 'blur' }
-        ],
+        // realName: [
+        //   { required: true, message: '请输入真实姓名', trigger: 'blur' },
+        //   { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        // ],
+        // authType: [
+        //   { required: true, message: '请输入真实姓名', trigger: 'blur' }
+        // ],
+        // userType: [
+        //   { required: true, message: '请选择用户类型', trigger: 'blur' }
+        // ],
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
@@ -222,17 +227,17 @@ export default {
       this.roleDatas = form.role.id
     },
     // 提交前做的操作
-    [CRUD.HOOK.afterValidateCU](crud) {
-      if (this.roleDatas == null | this.roleDatas === undefined) {
-        this.$message({
-          message: '角色不能为空',
-          type: 'warning'
-        })
-        return false
-      }
-      crud.form.role = userRoles
-      return true
-    },
+    // [CRUD.HOOK.afterValidateCU](crud) {
+    //   if (this.roleDatas == null | this.roleDatas === undefined) {
+    //     this.$message({
+    //       message: '角色不能为空',
+    //       type: 'warning'
+    //     })
+    //     return false
+    //   }
+    //   crud.form.role = userRoles
+    //   return true
+    // },
     // 获取弹窗内角色数据
     getRoles() {
       getAll().then(res => {
@@ -257,6 +262,8 @@ export default {
         code: ''
       }
     },
+
+
   }
 }
 </script>

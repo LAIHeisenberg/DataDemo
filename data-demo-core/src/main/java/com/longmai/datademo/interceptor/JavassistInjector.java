@@ -92,7 +92,9 @@ public class JavassistInjector extends Thread{
                 tw.printStackTrace();
             }
 
-            cm.insertBefore("com.longmai.datademo.interceptor.MySQLSessionInjectHandler.getSQL(this,$1,$2);");
+//            cm.insertBefore("$2=com.longmai.datademo.interceptor.MySQLSessionInjectHandler.getSQL2(this,$1,$2);");
+//            cm.insertBefore("{System.out.println(\"ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd($2)\");}");
+            //cm.insertBefore("com.longmai.datademo.interceptor.MySQLSessionInjectHandler.getSQL(this,$1,$2);");
             byte[] buffer = ctClass.toBytecode();
             if(ctClass.isFrozen()){
                 ctClass.defrost();

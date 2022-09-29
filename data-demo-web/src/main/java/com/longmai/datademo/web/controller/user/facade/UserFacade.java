@@ -1,5 +1,6 @@
 package com.longmai.datademo.web.controller.user.facade;
 
+import com.longmai.datademo.dao.po.UserPo;
 import com.longmai.datademo.dto.UserDto;
 import com.longmai.datademo.security.service.dto.JwtUserDto;
 import com.longmai.datademo.service.UserService;
@@ -8,7 +9,6 @@ import com.longmai.datademo.utils.SecurityUtils;
 import com.longmai.datademo.web.controller.user.view.UserView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +39,13 @@ public class UserFacade {
         map.put("currentUser", currentUser.getUsername());
         map.put("phone", currentUser.getUser().getPhone());
         return map;
+    }
+
+    public boolean save(UserDto userDto){
+        UserPo userPo = new UserPo();
+        BeanUtils.copyProperties(userDto,userPo);
+        userPo.setEnabled(true);
+        return userService.save(userPo);
     }
 
 

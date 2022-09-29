@@ -2,12 +2,14 @@ package com.longmai.datademo.dao.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 
 @Data
 @TableName("ddm_user")
 public class UserPo {
 
+    @Id
     private Long id;
 
     private String userName;

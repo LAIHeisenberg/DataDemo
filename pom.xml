@@ -17,6 +17,7 @@
         <module>data-demo-web</module>
         <module>data-demo-core</module>
         <module>data-demo-common</module>
+        <module>db-safe</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
@@ -145,13 +146,13 @@
     </dependencyManagement>
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
 </project>

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Manifest-Version: 1.0
+Premain-Class: com.longmai.datademo.interceptor.JavassistInjector
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
