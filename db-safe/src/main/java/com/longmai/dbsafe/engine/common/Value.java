@@ -18,10 +18,10 @@
 package com.longmai.dbsafe.engine.common;
 
 
-import com.longmai.dbsafe.engine.logging.P6LogLoadableOptions;
-import com.longmai.dbsafe.engine.logging.P6LogOptions;
+import com.longmai.dbsafe.engine.logging.DbSafeLogLoadableOptions;
+import com.longmai.dbsafe.engine.logging.DbSafeLogOptions;
 import com.longmai.dbsafe.engine.logging.format.BinaryFormat;
-import com.longmai.dbsafe.engine.spy.P6SpyOptions;
+import com.longmai.dbsafe.engine.dbsafe.DbSafeSpyOptions;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -89,11 +89,11 @@ public class Value {
 
       if (value instanceof byte[]) {
         // P6LogFactory may not be registered
-        P6LogLoadableOptions logOptions = P6LogOptions.getActiveInstance();
+        DbSafeLogLoadableOptions logOptions = DbSafeLogOptions.getActiveInstance();
         if (logOptions != null && logOptions.getExcludebinary()) {
           result = "[binary]";
         } else {
-          BinaryFormat binaryFormat = P6SpyOptions.getActiveInstance().getDatabaseDialectBinaryFormatInstance();
+          BinaryFormat binaryFormat = DbSafeSpyOptions.getActiveInstance().getDatabaseDialectBinaryFormatInstance();
           
           // return early because BinaryFormat#toString wraps the value in quotes if needed
           return binaryFormat.toString((byte[]) value);
@@ -109,11 +109,11 @@ public class Value {
 //          result = value.toString();
 //        }
       } else if (value instanceof Timestamp) {
-        result = new SimpleDateFormat(P6SpyOptions.getActiveInstance().getDatabaseDialectTimestampFormat()).format(value);
+        result = new SimpleDateFormat(DbSafeSpyOptions.getActiveInstance().getDatabaseDialectTimestampFormat()).format(value);
       } else if (value instanceof Date) {
-        result = new SimpleDateFormat(P6SpyOptions.getActiveInstance().getDatabaseDialectDateFormat()).format(value);
+        result = new SimpleDateFormat(DbSafeSpyOptions.getActiveInstance().getDatabaseDialectDateFormat()).format(value);
       } else if (value instanceof Boolean) {
-        if ("numeric".equals(P6SpyOptions.getActiveInstance().getDatabaseDialectBooleanFormat())) {
+        if ("numeric".equals(DbSafeSpyOptions.getActiveInstance().getDatabaseDialectBooleanFormat())) {
           result = Boolean.FALSE.equals(value) ? "0" : "1";
         } else {
           result = value.toString();

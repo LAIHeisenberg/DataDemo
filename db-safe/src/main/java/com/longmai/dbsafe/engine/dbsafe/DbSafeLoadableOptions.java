@@ -15,28 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.common;
+package com.longmai.dbsafe.engine.dbsafe;
 
-/**
- * Assures capability of the class to be logged by {@link DbSafeLogQuery}.
- *
- * @author Peter Butkovic
- */
-public interface Loggable {
+import java.util.Map;
+
+public interface DbSafeLoadableOptions {
 
   /**
-   * @return Original {@code SQL}.
+   * Loads only those options, that are relevant for the current implementation.
+   * 
+   * @param options
+   *          options to be loaded.
    */
-  String getSql();
+  void load(Map<String, String> options);
 
-  /**
-   * @return The {@code SQL} having '?' replaced with real values used.
-   */
-  String getSqlWithValues();
-
-  /**
-   * @return the connection information.
-   */
-  ConnectionInformation getConnectionInformation();
-
+  Map<String, String> getDefaults();
 }

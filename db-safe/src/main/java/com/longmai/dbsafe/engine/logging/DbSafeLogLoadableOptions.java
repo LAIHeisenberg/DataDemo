@@ -15,28 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.common;
+package com.longmai.dbsafe.engine.logging;
 
-/**
- * Assures capability of the class to be logged by {@link DbSafeLogQuery}.
- *
- * @author Peter Butkovic
- */
-public interface Loggable {
 
-  /**
-   * @return Original {@code SQL}.
-   */
-  String getSql();
+import com.longmai.dbsafe.engine.dbsafe.DbSafeLoadableOptions;
 
-  /**
-   * @return The {@code SQL} having '?' replaced with real values used.
-   */
-  String getSqlWithValues();
+import java.util.regex.Pattern;
 
-  /**
-   * @return the connection information.
-   */
-  ConnectionInformation getConnectionInformation();
+public interface DbSafeLogLoadableOptions extends DbSafeLoadableOptions, DbSafeLogOptionsMBean {
+
+  // these we don't need to be exposed via JMX
+  
+  void setExcludebinary(String excludebinary);
+  
+  void setFilter(String filter);
+
+  void setExecutionThreshold(String executionThreshold);
+  
+  Pattern getIncludeExcludePattern();
+
+  Pattern getSQLExpressionPattern();
 
 }

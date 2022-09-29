@@ -15,28 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.common;
+package com.longmai.dbsafe.engine.dbsafe;
+
+
+import com.longmai.dbsafe.engine.event.JdbcEventListener;
 
 /**
- * Assures capability of the class to be logged by {@link DbSafeLogQuery}.
- *
+ * Factory for creating the {@link JdbcEventListener}.
+ * 
  * @author Peter Butkovic
+ * @since 3.3.0
  */
-public interface Loggable {
+public interface JdbcEventListenerFactory {
 
-  /**
-   * @return Original {@code SQL}.
-   */
-  String getSql();
-
-  /**
-   * @return The {@code SQL} having '?' replaced with real values used.
-   */
-  String getSqlWithValues();
-
-  /**
-   * @return the connection information.
-   */
-  ConnectionInformation getConnectionInformation();
-
+  JdbcEventListener createJdbcEventListener();
+  
 }

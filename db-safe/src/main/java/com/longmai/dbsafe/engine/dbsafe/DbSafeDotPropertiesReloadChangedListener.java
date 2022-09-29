@@ -15,28 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.common;
+package com.longmai.dbsafe.engine.dbsafe;
 
-/**
- * Assures capability of the class to be logged by {@link DbSafeLogQuery}.
- *
- * @author Peter Butkovic
- */
-public interface Loggable {
+public interface DbSafeDotPropertiesReloadChangedListener {
 
-  /**
-   * @return Original {@code SQL}.
-   */
-  String getSql();
-
-  /**
-   * @return The {@code SQL} having '?' replaced with real values used.
-   */
-  String getSqlWithValues();
-
-  /**
-   * @return the connection information.
-   */
-  ConnectionInformation getConnectionInformation();
-
+  void setAutoReload(boolean isEnabled, long secs);
 }

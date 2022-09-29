@@ -15,28 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.common;
+package com.longmai.dbsafe.engine.dbsafe.appender;
 
-/**
- * Assures capability of the class to be logged by {@link DbSafeLogQuery}.
- *
- * @author Peter Butkovic
- */
-public interface Loggable {
 
-  /**
-   * @return Original {@code SQL}.
-   */
-  String getSql();
+import com.longmai.dbsafe.engine.logging.Category;
 
-  /**
-   * @return The {@code SQL} having '?' replaced with real values used.
-   */
-  String getSqlWithValues();
+import java.io.PrintStream;
 
-  /**
-   * @return the connection information.
-   */
-  ConnectionInformation getConnectionInformation();
+public class StdoutLogger extends FormattedLogger {
 
+  protected PrintStream getStream() {
+    return System.out;
+  }
+
+  @Override
+  public void logException(Exception e) {
+    e.printStackTrace(getStream());
+  }
+
+  @Override
+  public void logText(String text) {
+    if (!text.trim().isEmpty()) {
+      getStream().println(text);
+    }
+  }
+
+  @Override
+  public boolean isCategoryEnabled(Category category) {
+    // no restrictions on logger side
+    return true;
+  }
 }
+

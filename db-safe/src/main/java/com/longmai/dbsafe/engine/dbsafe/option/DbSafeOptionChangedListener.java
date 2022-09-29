@@ -15,28 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.common;
+package com.longmai.dbsafe.engine.dbsafe.option;
 
-/**
- * Assures capability of the class to be logged by {@link DbSafeLogQuery}.
- *
- * @author Peter Butkovic
- */
-public interface Loggable {
+public interface DbSafeOptionChangedListener {
 
-  /**
-   * @return Original {@code SQL}.
-   */
-  String getSql();
-
-  /**
-   * @return The {@code SQL} having '?' replaced with real values used.
-   */
-  String getSqlWithValues();
-
-  /**
-   * @return the connection information.
-   */
-  ConnectionInformation getConnectionInformation();
-
+  public void optionChanged(final String key, final Object oldValue, final Object newValue);
 }

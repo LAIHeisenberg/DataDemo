@@ -15,28 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.longmai.dbsafe.engine.common;
+package com.longmai.dbsafe.engine.outage;
 
-/**
- * Assures capability of the class to be logged by {@link DbSafeLogQuery}.
- *
- * @author Peter Butkovic
- */
-public interface Loggable {
+public interface DbSafeOutageOptionsMBean {
 
-  /**
-   * @return Original {@code SQL}.
-   */
-  String getSql();
+  public boolean getOutageDetection();
 
-  /**
-   * @return The {@code SQL} having '?' replaced with real values used.
-   */
-  String getSqlWithValues();
+  void setOutageDetection(boolean outagedetection);
 
-  /**
-   * @return the connection information.
-   */
-  ConnectionInformation getConnectionInformation();
+  public long getOutageDetectionInterval();
+
+  void setOutageDetectionInterval(long outagedetectioninterval);
 
 }

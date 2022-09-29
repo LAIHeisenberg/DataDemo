@@ -48,7 +48,7 @@ public class ResultSetInformation implements Loggable {
    */
   public void generateLogMessage() {
     if (lastRowLogged != currRow) {
-      P6LogQuery.log(Category.RESULTSET, this);
+      DbSafeLogQuery.log(Category.RESULTSET, this);
       lastRowLogged = currRow;
     }
   }

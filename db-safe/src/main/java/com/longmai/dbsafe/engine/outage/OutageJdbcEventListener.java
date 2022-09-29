@@ -25,7 +25,7 @@ import com.longmai.dbsafe.engine.event.SimpleJdbcEventListener;
 import java.sql.SQLException;
 
 /**
- * This event listener registers method invocations at {@link P6OutageDetector}
+ * This event listener registers method invocations at {@link DbSafeOutageDetector}
  */
 public class OutageJdbcEventListener extends SimpleJdbcEventListener {
 
@@ -36,59 +36,59 @@ public class OutageJdbcEventListener extends SimpleJdbcEventListener {
 
   @Override
   public void onBeforeCommit(ConnectionInformation connectionInformation) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "commit", "", "", connectionInformation.getUrl());
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "commit", "", "", connectionInformation.getUrl());
     }
   }
 
   @Override
   public void onAfterCommit(ConnectionInformation connectionInformation, long timeElapsedNanos, SQLException e) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.unregisterInvocation(this);
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.unregisterInvocation(this);
     }
   }
 
   @Override
   public void onBeforeRollback(ConnectionInformation connectionInformation) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "rollback", "", "", connectionInformation.getUrl());
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "rollback", "", "", connectionInformation.getUrl());
     }
   }
 
   @Override
   public void onAfterRollback(ConnectionInformation connectionInformation, long timeElapsedNanos, SQLException e) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.unregisterInvocation(this);
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.unregisterInvocation(this);
     }
   }
 
   @Override
   public void onBeforeAnyAddBatch(StatementInformation statementInformation) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "batch",
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "batch",
         statementInformation.getSqlWithValues(), statementInformation.getStatementQuery(), statementInformation.getConnectionInformation().getUrl());
     }
   }
 
   @Override
   public void onAfterAnyAddBatch(StatementInformation statementInformation, long timeElapsedNanos, SQLException e) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.unregisterInvocation(this);
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.unregisterInvocation(this);
     }
   }
 
   @Override
   public void onBeforeAnyExecute(StatementInformation statementInformation) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "statement",
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.registerInvocation(this, System.nanoTime(), "statement",
         statementInformation.getSqlWithValues(), statementInformation.getStatementQuery(), statementInformation.getConnectionInformation().getUrl());
     }
   }
 
   @Override
   public void onAfterAnyExecute(StatementInformation statementInformation, long timeElapsedNanos, SQLException e) {
-    if (P6OutageOptions.getActiveInstance().getOutageDetection()) {
-      P6OutageDetector.INSTANCE.unregisterInvocation(this);
+    if (DbSafeOutageOptions.getActiveInstance().getOutageDetection()) {
+      DbSafeOutageDetector.INSTANCE.unregisterInvocation(this);
     }
   }
 }
