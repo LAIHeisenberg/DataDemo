@@ -52,14 +52,6 @@ public class CompoundJdbcEventListener extends JdbcEventListener {
    * @param listener The listener to add
    */
   public void addListener(JdbcEventListener listener) {
-//    ProxyFactory proxyFactory = new ProxyFactory(listener);
-//    if(listener instanceof CompoundJdbcEventListener){
-//      listener = (CompoundJdbcEventListener)proxyFactory.getProxyInstance();
-//    }else if(listener instanceof DefaultEventListener){
-//      listener = (DefaultEventListener)proxyFactory.getProxyInstance();
-//    }else if(listener instanceof LoggingEventListener){
-//      listener = (LoggingEventListener)proxyFactory.getProxyInstance();
-//    }
     eventListeners.add(listener);
   }
 

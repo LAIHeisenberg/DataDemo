@@ -2,9 +2,11 @@ package com.longmai.dbsafe.engine.proxy;
 
 
 import com.longmai.dbsafe.engine.common.PreparedStatementInformation;
+import com.longmai.dbsafe.engine.common.StatementInformation;
 import com.longmai.dbsafe.engine.common.Value;
 import com.longmai.dbsafe.engine.wrapper.PreparedStatementWrapper;
 import com.longmai.dbsafe.engine.wrapper.ResultSetWrapper;
+import com.longmai.dbsafe.engine.wrapper.StatementWrapper;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
@@ -12,20 +14,27 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.Objects;
 
 public class TargetInterceptor implements MethodInterceptor {
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-
-        if (o instanceof PreparedStatementWrapper && method.getName().contains("execute")) {
-            Field statementInformation = o.getClass().getField("statementInformation");
-            Field delegate = o.getClass().getField("delegate");
-
-            PreparedStatementInformation preparedStatementInformation = (PreparedStatementInformation) statementInformation.get(o);
+        //加密参数
+        decryptParam(o);
+        Object result = methodProxy.invokeSuper(o, objects);
+        //解密结果
+        result = decryptResult(o,objects,result);
+        return result;
+    }
+    private void decryptParam(Object o) throws Exception{
+        if (o instanceof PreparedStatementWrapper) {
+            Field statementInformationField = o.getClass().getField("statementInformation");
+            PreparedStatementInformation preparedStatementInformation = (PreparedStatementInformation) statementInformationField.get(o);
             String sql = preparedStatementInformation.getSqlWithValues();
             if(!Objects.isNull(sql) && sql.toLowerCase().contains("insert") ) {
+                Field delegate = o.getClass().getField("delegate");
                 PreparedStatement preparedStatement = (PreparedStatement) delegate.get(o);
                 Map<Integer, Value> parameterValues = preparedStatementInformation.getParameterValues();
                 if (!Objects.isNull(parameterValues) && parameterValues.size()>0) {
@@ -35,24 +44,31 @@ public class TargetInterceptor implements MethodInterceptor {
                                 preparedStatement.setObject(parameterValue.getKey() + 1, encrypt(parameterValue.getValue().getValue()));
                             }
                         } catch (SQLException e) {
-                            throw new RuntimeException(e);
+                            System.out.println(e);
                         }
                     });
                 }
             }
-
+        }else if(o instanceof StatementWrapper){
+            Field statementInformationField = o.getClass().getField("statementInformation");
+            StatementInformation statementInformation = (StatementInformation) statementInformationField.get(o);
+            String sql = statementInformation.getSqlWithValues();
+            if(!Objects.isNull(sql) && sql.toLowerCase().contains("insert") ) {
+                Field delegate = o.getClass().getField("delegate");
+                Statement statement = (Statement) delegate.get(o);
+            }
         }
+    }
 
-        Object result = methodProxy.invokeSuper(o, objects);
-
+    private Object decryptResult(Object o,Object[] objects,Object result) {
         //对返回结果进行解密
         if (!Objects.isNull(result) && o instanceof ResultSetWrapper) {
             try {
-                if (!Objects.isNull(objects) && objects[0] instanceof String && "nick_name".equals(objects[0].toString())) {
+                if (!Objects.isNull(objects) && "nick_name".equals(objects[0].toString())) {
                     result = decrypt(result);
                 }
             } catch (Exception e) {
-                System.out.println("异常");
+                System.out.println(e);
             }
         }
         return result;
