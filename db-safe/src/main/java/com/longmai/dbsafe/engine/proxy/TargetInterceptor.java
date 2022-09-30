@@ -20,13 +20,13 @@ public class TargetInterceptor implements MethodInterceptor {
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
 
         if (o instanceof PreparedStatementWrapper && method.getName().contains("execute")) {
-            Field field = o.getClass().getField("statementInformation");
-            Field field2 = o.getClass().getField("delegate");
+            Field statementInformation = o.getClass().getField("statementInformation");
+            Field delegate = o.getClass().getField("delegate");
 
-            PreparedStatementInformation preparedStatementInformation = (PreparedStatementInformation) field.get(o);
+            PreparedStatementInformation preparedStatementInformation = (PreparedStatementInformation) statementInformation.get(o);
             String sql = preparedStatementInformation.getSqlWithValues();
             if(!Objects.isNull(sql) && sql.toLowerCase().contains("insert") ) {
-                PreparedStatement preparedStatement = (PreparedStatement) field2.get(o);
+                PreparedStatement preparedStatement = (PreparedStatement) delegate.get(o);
                 Map<Integer, Value> parameterValues = preparedStatementInformation.getParameterValues();
                 if (!Objects.isNull(parameterValues) && parameterValues.size()>0) {
                     parameterValues.entrySet().stream().forEach(parameterValue -> {
