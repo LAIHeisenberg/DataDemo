@@ -18,7 +18,6 @@ import java.util.Objects;
 public class TargetInterceptor implements MethodInterceptor {
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-        System.out.println("代理方法：" + o.getClass() + method.getName());
 
         if (o instanceof PreparedStatementWrapper && method.getName().contains("execute")) {
             Field field = o.getClass().getField("statementInformation");
