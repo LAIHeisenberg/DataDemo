@@ -14,7 +14,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,13 +21,13 @@ public class TargetInterceptor implements MethodInterceptor {
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
         //加密参数
-        decryptParam(o);
+        encryptParam(o);
         Object result = methodProxy.invokeSuper(o, objects);
         //解密结果
         result = decryptResult(o,objects,result);
         return result;
     }
-    private void decryptParam(Object o) throws Exception{
+    private void encryptParam(Object o) throws Exception{
         if (o instanceof PreparedStatementWrapper) {
             Field statementInformationField = o.getClass().getField("statementInformation");
             PreparedStatementInformation preparedStatementInformation = (PreparedStatementInformation) statementInformationField.get(o);
@@ -54,8 +53,7 @@ public class TargetInterceptor implements MethodInterceptor {
             StatementInformation statementInformation = (StatementInformation) statementInformationField.get(o);
             String sql = statementInformation.getSqlWithValues();
             if(!Objects.isNull(sql) && sql.toLowerCase().contains("insert") ) {
-                Field delegate = o.getClass().getField("delegate");
-                Statement statement = (Statement) delegate.get(o);
+                //此处加密参数后替换sql
             }
         }
     }

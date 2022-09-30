@@ -36,9 +36,9 @@ import java.sql.*;
 public class StatementWrapper extends AbstractWrapper implements Statement {
 
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-  private final Statement delegate;
+  public final Statement delegate;
   protected final JdbcEventListener eventListener;
-  private final StatementInformation statementInformation;
+  public final StatementInformation statementInformation;
 
   public static Statement wrap(Statement delegate, StatementInformation statementInformation, JdbcEventListener eventListener) {
     if (delegate == null) {
