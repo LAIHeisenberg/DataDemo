@@ -15,7 +15,7 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice {
         //这里可以拿到request信息来做特定的逻辑处理
         if (request.getURI().getPath().equals("/api/users")) {
             //测试添加http响应头
-            response.getHeaders().set("X-Rewrite", "laiyzhhhh");
+            response.getHeaders().set("X-Need-Masking", "laiyzhhhh");
         }
 
         return body;
