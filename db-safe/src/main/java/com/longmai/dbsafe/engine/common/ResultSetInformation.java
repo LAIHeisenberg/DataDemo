@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@
  */
 package com.longmai.dbsafe.engine.common;
 
+import com.longmai.dbsafe.engine.logging.Category;
 
 import java.sql.ResultSet;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 
 /**
  * @author Quinton McCombs
@@ -46,6 +48,7 @@ public class ResultSetInformation implements Loggable {
    */
   public void generateLogMessage() {
     if (lastRowLogged != currRow) {
+      P6LogQuery.log(Category.RESULTSET, this);
       lastRowLogged = currRow;
     }
   }

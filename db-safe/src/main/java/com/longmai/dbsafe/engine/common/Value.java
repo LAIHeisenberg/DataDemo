@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
  */
 package com.longmai.dbsafe.engine.common;
 
-import com.longmai.dbsafe.engine.core.DbSafeImplOptions;
+import com.longmai.dbsafe.engine.logging.P6LogLoadableOptions;
+import com.longmai.dbsafe.engine.logging.P6LogOptions;
+import com.longmai.dbsafe.engine.logging.format.BinaryFormat;
+import com.longmai.dbsafe.engine.spy.P6SpyOptions;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 /**
  * Value holder of the data passed to DB as well as of those retrieved capable
@@ -34,7 +36,6 @@ import java.util.regex.Pattern;
  */
 public class Value {
 
-  private static final Pattern ESPECIAL_CHARACTER_PATTERN = Pattern.compile("'");
   /**
    * Value itself.
    */
@@ -68,6 +69,7 @@ public class Value {
    * <li>{@link Date} values it in a way configured via configuration
    * property: {@code dateformat},</li>
    * <li>{@code byte[]} values are converted to {@link String} representation using the configured
+   * database dialect {@link BinaryFormat}, unless configuration property {@code exclidebinary=true} is
    * set.</li>
    * <li>for other types string representation is simply returned.</li>
    * </ul>
@@ -76,14 +78,24 @@ public class Value {
    * @return
    */
   public String convertToString(Object value) {
-    String result=null;
+    String result;
     
     if (value == null) {
       result = "NULL";
     } else {
 
       if (value instanceof byte[]) {
-
+        // P6LogFactory may not be registered
+        P6LogLoadableOptions logOptions = P6LogOptions.getActiveInstance();
+        if (logOptions != null && logOptions.getExcludebinary()) {
+          result = "[binary]";
+        } else {
+          BinaryFormat binaryFormat = P6SpyOptions.getActiveInstance().getDatabaseDialectBinaryFormatInstance();
+          
+          // return early because BinaryFormat#toString wraps the value in quotes if needed
+          return binaryFormat.toString((byte[]) value);
+        }
+        
         // we should not do ((Blob) value).getBinaryStream(). ...
         // as inputstream might not be re-rea
 //      } else  if (value instanceof Blob) {
@@ -94,11 +106,11 @@ public class Value {
 //          result = value.toString();
 //        }
       } else if (value instanceof Timestamp) {
-        result = new SimpleDateFormat(DbSafeImplOptions.getActiveInstance().getDatabaseDialectTimestampFormat()).format(value);
+        result = new SimpleDateFormat(P6SpyOptions.getActiveInstance().getDatabaseDialectTimestampFormat()).format(value);
       } else if (value instanceof Date) {
-        result = new SimpleDateFormat(DbSafeImplOptions.getActiveInstance().getDatabaseDialectDateFormat()).format(value);
+        result = new SimpleDateFormat(P6SpyOptions.getActiveInstance().getDatabaseDialectDateFormat()).format(value);
       } else if (value instanceof Boolean) {
-        if ("numeric".equals(DbSafeImplOptions.getActiveInstance().getDatabaseDialectBooleanFormat())) {
+        if ("numeric".equals(P6SpyOptions.getActiveInstance().getDatabaseDialectBooleanFormat())) {
           result = Boolean.FALSE.equals(value) ? "0" : "1";
         } else {
           result = value.toString();
@@ -155,7 +167,7 @@ public class Value {
    * @return escaped value.
    */
   private String escape(String stringValue) {
-    return ESPECIAL_CHARACTER_PATTERN.matcher(stringValue).replaceAll("''");
+    return stringValue.replaceAll("'", "''");
   }
 
 }

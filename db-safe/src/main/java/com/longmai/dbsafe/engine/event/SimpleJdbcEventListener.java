@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 package com.longmai.dbsafe.engine.event;
-
 
 import com.longmai.dbsafe.engine.common.PreparedStatementInformation;
 import com.longmai.dbsafe.engine.common.StatementInformation;
@@ -130,11 +129,13 @@ public abstract class SimpleJdbcEventListener extends JdbcEventListener {
   @Override
   public void onAfterExecuteQuery(PreparedStatementInformation statementInformation, long timeElapsedNanos, SQLException e) {
     onAfterAnyExecute(statementInformation, timeElapsedNanos, e);
+    System.out.println("onAfterExecuteQuery1..");
   }
 
   @Override
   public void onAfterExecuteQuery(StatementInformation statementInformation, long timeElapsedNanos, String sql, SQLException e) {
     onAfterAnyExecute(statementInformation, timeElapsedNanos, e);
+    System.out.println("onAfterExecuteQuery2.."+sql);
   }
 
   @Override

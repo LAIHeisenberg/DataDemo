@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ public class PreparedStatementInformation extends StatementInformation implement
     parameterValues.put(position - 1, new Value(value));
   }
 
-  public Map<Integer, Value> getParameterValues() {
+  protected Map<Integer, Value> getParameterValues() {
     return parameterValues;
   }
 

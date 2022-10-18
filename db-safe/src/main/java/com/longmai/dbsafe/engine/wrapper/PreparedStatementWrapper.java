@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,29 @@
  */
 package com.longmai.dbsafe.engine.wrapper;
 
-
 import com.longmai.dbsafe.engine.common.PreparedStatementInformation;
 import com.longmai.dbsafe.engine.common.ResultSetInformation;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
-import com.longmai.dbsafe.engine.proxy.ProxyFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.NClob;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
+import java.sql.SQLException;
+import java.sql.SQLXML;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
@@ -41,19 +53,14 @@ import java.util.Calendar;
  */
 public class PreparedStatementWrapper extends StatementWrapper implements PreparedStatement {
 
-  public   PreparedStatement delegate;
-  public  PreparedStatementInformation statementInformation;
+  private final PreparedStatement delegate;
+  private final PreparedStatementInformation statementInformation;
 
   public static PreparedStatement wrap(PreparedStatement delegate, PreparedStatementInformation preparedStatementInformation, JdbcEventListener eventListener) {
     if (delegate == null) {
       return null;
     }
-  //  return new PreparedStatementWrapper(delegate, preparedStatementInformation, eventListener);
-    PreparedStatementWrapper preparedStatementWrapper =  new PreparedStatementWrapper(delegate, preparedStatementInformation, eventListener);
-    ProxyFactory proxyFactory = new ProxyFactory(preparedStatementWrapper);
-    preparedStatementWrapper = (PreparedStatementWrapper)proxyFactory.getProxyInstance(
-            new Class[]{PreparedStatement.class, PreparedStatementInformation.class,JdbcEventListener.class},new Object[]{delegate,preparedStatementInformation,eventListener});
-    return preparedStatementWrapper;
+    return new PreparedStatementWrapper(delegate, preparedStatementInformation, eventListener);
   }
 
   protected PreparedStatementWrapper(PreparedStatement delegate, PreparedStatementInformation preparedStatementInformation, JdbcEventListener eventListener) {
@@ -346,13 +353,14 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
     }
   }
 
+  @Override
   public boolean execute() throws SQLException {
     SQLException e = null;
     long start = System.nanoTime();
     try {
       eventListener.onBeforeExecute(statementInformation);
-      ParameterMetaData parameterMetaData = delegate.getParameterMetaData();
-      return delegate.execute();
+      return delegate.execute(statementInformation.getSql());
+//      return delegate.execute();
     } catch (SQLException sqle) {
       e = sqle;
       throw e;

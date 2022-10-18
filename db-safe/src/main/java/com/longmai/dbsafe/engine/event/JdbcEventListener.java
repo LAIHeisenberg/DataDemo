@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,19 @@
  */
 package com.longmai.dbsafe.engine.event;
 
+
 import com.longmai.dbsafe.engine.common.*;
 
 import javax.sql.DataSource;
-import java.sql.*;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+import java.sql.Statement;
 
 /**
  * Implementations of this class receive notifications for interesting JDBC events.
@@ -31,7 +40,7 @@ import java.sql.*;
  * The fist way is to add the fully qualified class name of your implementation to
  * <code>src/main/resources/META-INF/services/com.p6spy.engine.event.JdbcEventListener</code>.
  * <p>
- * The second way is to implement a
+ * The second way is to implement a {@link com.p6spy.engine.spy.P6Factory}
  * <p>
  * <b>NOTE:</b> Exceptions thrown in this event listener won't be caught. So you have to make sure that your event
  * listener does not throw exceptions. For example, if your {@link #onConnectionWrapped} method throws an exception
@@ -43,6 +52,8 @@ public abstract class JdbcEventListener {
    * This callback method is executed before a {@link Connection} obtained from a {@link DataSource} or a {@link Driver}.
    * <p>
    * The {@link ConnectionInformation} holds information about the creator of the connection which is either
+   * {@link ConnectionInformation#dataSource}, {@link ConnectionInformation#driver} or
+   * {@link ConnectionInformation#pooledConnection}, though {@link ConnectionInformation#connection} itself is <code>null</code>.
    *
    * @param connectionInformation The meta information about the wrapped {@link Connection}
    */
@@ -53,6 +64,8 @@ public abstract class JdbcEventListener {
    * This callback method is executed after a {@link Connection} obtained from a {@link DataSource} or a {@link Driver}.
    * <p>
    * The {@link ConnectionInformation} holds information about the creator of the connection which is either
+   * {@link ConnectionInformation#dataSource}, {@link ConnectionInformation#driver} or
+   * {@link ConnectionInformation#pooledConnection}, though {@link ConnectionInformation#connection} itself is <code>null</code>
    * when {@link SQLException} is not <code>null</code> and vise versa.
    *
    * @param connectionInformation The meta information about the wrapped {@link Connection}
@@ -66,6 +79,8 @@ public abstract class JdbcEventListener {
    * This callback method is executed after a wrapped {@link Connection} has been created.
    * <p>
    * The {@link ConnectionInformation} holds information about the creator of the connection which is either
+   * {@link ConnectionInformation#dataSource}, {@link ConnectionInformation#driver} or
+   * {@link ConnectionInformation#pooledConnection}.
    *
    * @param connectionInformation The meta information about the wrapped {@link Connection}
    *

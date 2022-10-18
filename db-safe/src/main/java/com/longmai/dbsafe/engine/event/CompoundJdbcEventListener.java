@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -196,6 +196,7 @@ public class CompoundJdbcEventListener extends JdbcEventListener {
     for (JdbcEventListener eventListener : eventListeners) {
       eventListener.onAfterExecuteQuery(statementInformation, timeElapsedNanos, e);
     }
+    System.out.println("onAfterExecuteQuery01..");
   }
 
   @Override
@@ -203,6 +204,7 @@ public class CompoundJdbcEventListener extends JdbcEventListener {
     for (JdbcEventListener eventListener : eventListeners) {
       eventListener.onBeforeExecuteQuery(statementInformation, sql);
     }
+    System.out.println("onAfterExecuteQuery02.."+sql);
   }
 
   @Override

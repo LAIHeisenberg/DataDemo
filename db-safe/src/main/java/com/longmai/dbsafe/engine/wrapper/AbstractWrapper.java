@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package com.longmai.dbsafe.engine.wrapper;
 import java.sql.SQLException;
 import java.sql.Wrapper;
 
-public abstract class AbstractWrapper implements Wrapper, DbSafeProxy {
+public abstract class AbstractWrapper implements Wrapper, P6Proxy {
 
   private final Object delegate;
 
@@ -45,7 +45,7 @@ public abstract class AbstractWrapper implements Wrapper, DbSafeProxy {
    * @return true if proxy - false otherwise
    */
   public static boolean isProxy(final Class<?> clazz) {
-    return (clazz != null && DbSafeProxy.class.isAssignableFrom(clazz));
+    return (clazz != null && P6Proxy.class.isAssignableFrom(clazz));
   }
 
   @Override
@@ -92,8 +92,8 @@ public abstract class AbstractWrapper implements Wrapper, DbSafeProxy {
   @Override
   public boolean equals(Object obj) {
     // If the object to pass to the equals method is another P6Spy proxy, then unwrap it first.
-    if (obj instanceof DbSafeProxy) {
-      obj = ((DbSafeProxy) obj).unwrapP6SpyProxy();
+    if (obj instanceof P6Proxy) {
+      obj = ((P6Proxy) obj).unwrapP6SpyProxy();
     }
     return delegate.equals(obj);
   }

@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package com.longmai.dbsafe.engine.common;
 
 /**
+ * Assures capability of the class to be logged by {@link P6LogQuery}.
  *
  * @author Peter Butkovic
  */

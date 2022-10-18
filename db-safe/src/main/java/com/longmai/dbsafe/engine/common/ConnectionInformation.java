@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
  */
 package com.longmai.dbsafe.engine.common;
 
-import javax.sql.CommonDataSource;
-import javax.sql.PooledConnection;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.sql.CommonDataSource;
+import javax.sql.PooledConnection;
 
 /**
  * @author Quinton McCombs
@@ -239,6 +240,7 @@ public class ConnectionInformation implements Loggable {
   }
 
   /**
+   * If the connection was created by calling {@link Driver#connect(String, Properties)},
    * returns the {@link #url} which was used to create the {@link #connection}.
    * Returns {@code null} otherwise.
    *

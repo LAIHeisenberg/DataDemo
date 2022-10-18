@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,31 @@
  */
 package com.longmai.dbsafe.engine.wrapper;
 
-
 import com.longmai.dbsafe.engine.common.ResultSetInformation;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
-import com.longmai.dbsafe.engine.proxy.ProxyFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.NClob;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
+import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
+
 
 /**
  * This implementation wraps a {@link ResultSet}  and notifies a {@link JdbcEventListener}
@@ -48,12 +61,7 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
     if (delegate == null) {
       return null;
     }
-    //return new ResultSetWrapper(delegate, resultSetInformation, eventListener);
-    ResultSetWrapper resultSetWrapper =  new ResultSetWrapper(delegate, resultSetInformation, eventListener);
-    ProxyFactory proxyFactory = new ProxyFactory(resultSetWrapper);
-    resultSetWrapper = (ResultSetWrapper)proxyFactory.getProxyInstance(
-            new Class[]{ResultSet.class, ResultSetInformation.class,JdbcEventListener.class},new Object[]{delegate,resultSetInformation,eventListener});
-    return resultSetWrapper;
+    return new ResultSetWrapper(delegate, resultSetInformation, eventListener);
   }
 
   public ResultSetWrapper(ResultSet delegate, ResultSetInformation resultSetInformation, JdbcEventListener eventListener) {

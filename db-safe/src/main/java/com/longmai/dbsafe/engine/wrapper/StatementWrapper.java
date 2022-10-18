@@ -1,7 +1,7 @@
 /**
  * P6Spy
  *
- * Copyright (C) 2002 P6Spy
+ * Copyright (C) 2002 - 2020 P6Spy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,13 @@ package com.longmai.dbsafe.engine.wrapper;
 import com.longmai.dbsafe.engine.common.ResultSetInformation;
 import com.longmai.dbsafe.engine.common.StatementInformation;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
-import com.longmai.dbsafe.engine.proxy.ProxyFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
+
 
 /**
  * This implementation wraps a {@link StatementWrapper}  and notifies a {@link JdbcEventListener}
@@ -36,20 +40,15 @@ import java.sql.*;
 public class StatementWrapper extends AbstractWrapper implements Statement {
 
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-  public final Statement delegate;
+  private final Statement delegate;
   protected final JdbcEventListener eventListener;
-  public final StatementInformation statementInformation;
+  private final StatementInformation statementInformation;
 
   public static Statement wrap(Statement delegate, StatementInformation statementInformation, JdbcEventListener eventListener) {
     if (delegate == null) {
       return null;
     }
-    //return new StatementWrapper(delegate, statementInformation, eventListener);
-    StatementWrapper statementWrapper =  new StatementWrapper(delegate, statementInformation, eventListener);
-    ProxyFactory proxyFactory = new ProxyFactory(statementWrapper);
-    statementWrapper = (StatementWrapper)proxyFactory.getProxyInstance(
-            new Class[]{Statement.class,StatementInformation.class,JdbcEventListener.class},new Object[]{delegate,statementInformation,eventListener});
-    return statementWrapper;
+    return new StatementWrapper(delegate, statementInformation, eventListener);
   }
 
   protected StatementWrapper(Statement delegate, StatementInformation statementInformation, JdbcEventListener eventListener) {
@@ -76,6 +75,7 @@ public class StatementWrapper extends AbstractWrapper implements Statement {
 
   @Override
   public ResultSet executeQuery(String sql) throws SQLException {
+    System.out.println("executeQuery:  === "+ sql);
     statementInformation.setStatementQuery(sql);
     SQLException e = null;
     long start = System.nanoTime();
