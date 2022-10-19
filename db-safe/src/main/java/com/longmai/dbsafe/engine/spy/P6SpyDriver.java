@@ -21,6 +21,7 @@ import com.longmai.dbsafe.engine.common.ConnectionInformation;
 import com.longmai.dbsafe.engine.common.P6LogQuery;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
 import com.longmai.dbsafe.engine.wrapper.ConnectionWrapper;
+import com.longmai.dbsafe.utils.DBContext;
 
 import java.sql.Connection;
 import java.sql.Driver;

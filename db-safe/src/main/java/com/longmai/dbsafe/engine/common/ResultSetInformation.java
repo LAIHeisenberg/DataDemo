@@ -93,7 +93,7 @@ public class ResultSetInformation implements Loggable {
    * ({@link ResultSet#getString(int)}, {@link ResultSet#getBoolean(int)}, etc.) will be returned.
    */
   public Map<String, Value> getResultMap() {
-    return Collections.unmodifiableMap(resultMap);
+    return resultMap;
   }
 
   public StatementInformation getStatementInformation() {

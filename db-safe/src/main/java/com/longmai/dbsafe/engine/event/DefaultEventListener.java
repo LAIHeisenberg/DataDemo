@@ -24,23 +24,25 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLValuableExpr;
 import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectQuery;
 import com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
 import com.longmai.dbsafe.engine.common.*;
+import com.longmai.dbsafe.engine.logging.Category;
+import com.longmai.dbsafe.utils.DBSQLUtils;
+import net.sf.cglib.core.CollectionUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -91,12 +93,27 @@ public class DefaultEventListener extends JdbcEventListener {
       });
 
     }else if (sqlStatement instanceof SQLSelectStatement){
-
       SQLSelectStatement sqlSelectStatement = (SQLSelectStatement) sqlStatement;
       SQLSelectQueryBlock queryBlock = sqlSelectStatement.getSelect().getQueryBlock();
-      SQLExpr where = queryBlock.getWhere();
+      Map<String, SQLExpr> map = new HashMap<>();
+      DBSQLUtils.fun((SQLBinaryOpExpr)queryBlock.getWhere(), map);
 
-
+      //加密操作
+      List<String> encodeFieldList =  Arrays.asList("user_name");
+      encodeFieldList.stream().forEach(new Consumer<String>() {
+        @Override
+        public void accept(String s) {
+          SQLExpr sqlExpr = map.get(s);
+          if (sqlExpr instanceof SQLBinaryOpExpr){
+            SQLBinaryOpExpr sqlBinaryOpExpr = (SQLBinaryOpExpr)sqlExpr;
+            SQLCharExpr sqlCharExpr = (SQLCharExpr) sqlBinaryOpExpr.getRight();
+            SQLCharExpr clone = sqlCharExpr.clone();
+            String text = sqlCharExpr.getText();
+//            clone.setText(text+"aa");
+//            sqlBinaryOpExpr.replace(sqlCharExpr, clone);
+          }
+        }
+      });
     }
 
     statementInformation.setStatementQuery(SQLUtils.toSQLString(sqlStatement));
@@ -159,9 +176,19 @@ public class DefaultEventListener extends JdbcEventListener {
   }
 
   @Override
+  public void onBeforeResultSetNext(ResultSetInformation resultSetInformation) {
+    System.out.println("onBeforeResultSetNext..");
+  }
+
+  @Override
   public void onAfterGetResultSet(StatementInformation statementInformation, long timeElapsedNanos, SQLException e) {
     statementInformation.incrementTimeElapsed(timeElapsedNanos);
-    System.out.println("onAfterResultSetNext");
+    System.out.println("onAfterGetResultSet");
+  }
+
+  @Override
+  public void onAfterResultSetGet(ResultSetInformation resultSetInformation, int columnIndex, Object value, SQLException e) {
+    System.out.println("onAfterResultSetGet");
   }
 
   @Override
@@ -172,6 +199,22 @@ public class DefaultEventListener extends JdbcEventListener {
     if (hasNext) {
       resultSetInformation.incrementCurrRow();
     }
+    ResultSet resultSet = resultSetInformation.getResultSet();
+    //解密
+    List<String> list = Arrays.asList("user_name","nick_name");
+    list.forEach(new Consumer<String>() {
+      @Override
+      public void accept(String s) {
+//
+//        try {
+//          String value = resultSet.getString(s);
+//          resultSet.updateString(s, "$"+value+"%");
+//        } catch (SQLException ex) {
+//          ex.printStackTrace();
+//        }
+
+      }
+    });
 
   }
 

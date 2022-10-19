@@ -4,12 +4,13 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
 
 import lombok.Data;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,17 +30,71 @@ public class DBSQLUtils {
                 "\t, gender, password, auth_method, admin_flag, dn\n" +
                 "\t, cert, enabled, create_time, update_time\n" +
                 "FROM ddm_user\n" +
-                "WHERE user_name = 'admin' and phone = 1234123512 and enabled = true";
+                "WHERE user_name = 'admin' and create_time in (1,5) and enabled = true or auth_method > 2  and phone = 1234123512";
 
         SQLStatement sqlStatement = SQLUtils.parseSingleMysqlStatement(sql);
         SQLSelectStatement sqlSelectStatement = (SQLSelectStatement) sqlStatement;
         SQLSelect select = sqlSelectStatement.getSelect();
-        SQLSelectQueryBlock queryBlock = select.getQueryBlock();
-        SQLExpr where = queryBlock.getWhere();
+        SQLSelectQueryBlock selectQueryBlock = select.getQueryBlock();
+        Map<String, SQLExpr> map = new HashMap<>();
+        fun((SQLBinaryOpExpr)selectQueryBlock.getWhere(), map);
+
+        List<SQLExpr> split = SQLUtils.split((SQLBinaryOpExpr) selectQueryBlock.getWhere());
+        SQLBinaryOpExpr sqlExpr = (SQLBinaryOpExpr) split.get(1);
+        List<SQLExpr> split2 = SQLUtils.split((SQLBinaryOpExpr) sqlExpr.getLeft());
 
         Map<String, String> stringStringMap = extractTableColumnName(sql2);
+
+        Map<String, SQLExpr> map2 = new HashMap<>();
+        fun2((SQLBinaryOpExpr)selectQueryBlock.getWhere(), map2);
         System.out.println("111");
     }
+
+
+    public static void fun2(SQLBinaryOpExpr parentLeft, Map<String, SQLExpr> map){
+        List<SQLExpr> split = SQLUtils.split(parentLeft);
+        for (SQLExpr sqlExpr : split){
+            if (sqlExpr instanceof SQLBinaryOpExpr){
+                fun2((SQLBinaryOpExpr) sqlExpr, map);
+            }else {
+                if (sqlExpr instanceof SQLInListExpr){
+                    SQLInListExpr sqlInListExpr = (SQLInListExpr) sqlExpr;
+                    SQLIdentifierExpr sqlIdentifierExpr = (SQLIdentifierExpr) sqlInListExpr.getExpr();
+                    map.put(sqlIdentifierExpr.getName(), sqlInListExpr);
+
+                }else if (sqlExpr instanceof SQLIdentifierExpr){
+                    SQLIdentifierExpr sqlIdentifierExpr = (SQLIdentifierExpr) sqlExpr;
+                    map.put(sqlIdentifierExpr.getName(), (SQLBinaryOpExpr) sqlIdentifierExpr.getParent());
+                    return;
+                }
+
+            }
+        }
+    }
+
+
+    public static void fun(SQLBinaryOpExpr parentLeft, Map<String, SQLExpr> map){
+        if (parentLeft.getLeft() instanceof SQLBinaryOpExpr){
+            fun((SQLBinaryOpExpr) parentLeft.getLeft(), map);
+        } else if (parentLeft.getLeft() instanceof  SQLIdentifierExpr){
+            map.put(parentLeft.getLeft().toString(), parentLeft);
+            return;
+        }else if (parentLeft.getLeft() instanceof SQLInListExpr){
+            SQLInListExpr sqlInListExpr = (SQLInListExpr) parentLeft.getLeft();
+            map.put(sqlInListExpr.getExpr().toString(), sqlInListExpr);
+        }
+
+        if (parentLeft.getRight() instanceof SQLBinaryOpExpr){
+            fun((SQLBinaryOpExpr) parentLeft.getRight(), map);
+        }else if(parentLeft.getRight() instanceof SQLInListExpr){
+            SQLInListExpr sqlInListExpr = (SQLInListExpr) parentLeft.getRight();
+            map.put(sqlInListExpr.getExpr().toString(), sqlInListExpr);
+        }else if (parentLeft.getRight() instanceof SQLIdentifierExpr){
+            map.put(parentLeft.getRight().toString(), parentLeft.getRight());
+        }
+    }
+
+
 
     public static void parseSelectSql(String sql){
 

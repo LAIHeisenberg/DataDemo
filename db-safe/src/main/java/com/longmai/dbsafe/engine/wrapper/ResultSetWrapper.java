@@ -39,7 +39,9 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 
@@ -343,7 +345,13 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
   public String getString(String columnLabel) throws SQLException {
     SQLException e = null;
     try {
+
+      List<String> list = Arrays.asList("user_name", "nick_name");
       String value = delegate.getString(columnLabel);
+      if (list.contains(columnLabel)){
+        value = "$"+value+"%";
+      }
+
       eventListener.onAfterResultSetGet(resultSetInformation, columnLabel, value, null);
       return value;
     } catch (SQLException sqle) {
