@@ -346,7 +346,7 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
     SQLException e = null;
     try {
 
-      List<String> list = Arrays.asList("user_name", "nick_name");
+      List<String> list = Arrays.asList("nick_name");
       String value = delegate.getString(columnLabel);
       if (list.contains(columnLabel)){
         value = "$"+value+"%";

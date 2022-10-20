@@ -17,11 +17,19 @@
  */
 package com.longmai.dbsafe.engine.spy;
 
+import com.longmai.datakeeper.rest.db.DBEncryptHandler;
+import com.longmai.datakeeper.rest.dto.DBEncryptDto;
+import com.longmai.datakeeper.rest.param.DBEncryptRequest;
 import com.longmai.dbsafe.engine.common.ConnectionInformation;
 import com.longmai.dbsafe.engine.common.P6LogQuery;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
 import com.longmai.dbsafe.engine.wrapper.ConnectionWrapper;
 import com.longmai.dbsafe.utils.DBContext;
+import com.longmai.dbsafe.utils.FeignClientContext;
+import feign.Feign;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClientBuilder;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -39,6 +47,7 @@ import java.util.logging.Logger;
 /**
  * JDBC driver for P6Spy
  */
+@Component
 public class P6SpyDriver implements Driver {
   private static Driver instance = new P6SpyDriver();
   private static JdbcEventListenerFactory jdbcEventListenerFactory;
@@ -49,6 +58,10 @@ public class P6SpyDriver implements Driver {
     } catch (SQLException e) {
       throw new IllegalStateException("Could not register P6SpyDriver with DriverManager", e);
     }
+  }
+
+  public P6SpyDriver(){
+    instance = this;
   }
 
   @Override
@@ -105,6 +118,8 @@ public class P6SpyDriver implements Driver {
       connectionInformation.setConnection(conn);
       connectionInformation.setTimeToGetConnectionNs(System.nanoTime() - start);
       jdbcEventListener.onAfterGetConnection(connectionInformation, null);
+      DBContext.saveDBInfo(extractRealUrl(url),properties.getProperty("user"));
+      loadEncryptDto();
     } catch (SQLException e) {
       connectionInformation.setTimeToGetConnectionNs(System.nanoTime() - start);
       jdbcEventListener.onAfterGetConnection(connectionInformation, e);
@@ -165,5 +180,27 @@ public class P6SpyDriver implements Driver {
   
   public static void setJdbcEventListenerFactory(JdbcEventListenerFactory jdbcEventListenerFactory) {
     P6SpyDriver.jdbcEventListenerFactory = jdbcEventListenerFactory;
+  }
+
+  @Autowired
+  private DBEncryptHandler encryptHandler;
+
+  public void loadEncryptDto(){
+
+//    DBEncryptHandler dbEncryptHandler = FeignClientContext.buildClient(DBEncryptHandler.class, "DBEncryptHandler");
+    DBContext.DBInfo dbInfo = DBContext.getDBInfo();
+    DBEncryptRequest dbEncryptRequest = new DBEncryptRequest();
+    dbEncryptRequest.setDbName(dbInfo.getDbName());
+    dbEncryptRequest.setHost(dbInfo.getHost());
+    dbEncryptRequest.setPort(dbInfo.getPort());
+//    DBEncryptHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
+//            .target(DBEncryptHandler.class, "http://192.168.1.128:8060/rest/db");
+//    String test = dbEncryptHandler.test();
+    DBEncryptDto dbEncryptDto = encryptHandler.getDBEncryptDto(dbEncryptRequest);
+//    DBEncryptDto dbEncryptDto1 = dbEncryptHandler.test2();
+
+    System.out.println("loadEncryptDto success");
+
+
   }
 }

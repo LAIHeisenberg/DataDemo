@@ -21,8 +21,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,13 +32,16 @@ import java.util.List;
  * @date 2019-01-07
  */
 @Slf4j
-@Component
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
     private static boolean addCallback = true;
 
+
+    public static void setContext(ApplicationContext appContext){
+        applicationContext = appContext;
+    }
     /**
      * 针对 某些初始化方法，在SpringContextHolder 未初始化时 提交回调方法。
      * 在SpringContextHolder 初始化后，进行回调使用
