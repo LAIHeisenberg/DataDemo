@@ -18,13 +18,18 @@
 package com.longmai.dbsafe.engine.spy;
 
 import com.longmai.datakeeper.rest.db.DBEncryptHandler;
+import com.longmai.datakeeper.rest.db.DBUserMaskingHandler;
 import com.longmai.datakeeper.rest.dto.DBEncryptDto;
+import com.longmai.datakeeper.rest.dto.DBUserMaskingDto;
 import com.longmai.datakeeper.rest.param.DBEncryptRequest;
+import com.longmai.datakeeper.rest.param.DBMaskingRequest;
 import com.longmai.dbsafe.engine.common.ConnectionInformation;
 import com.longmai.dbsafe.engine.common.P6LogQuery;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
 import com.longmai.dbsafe.engine.wrapper.ConnectionWrapper;
 import com.longmai.dbsafe.utils.DBContext;
+import com.longmai.dbsafe.utils.DBEncryptContext;
+import com.longmai.dbsafe.utils.DBUserMaskingContext;
 import feign.Feign;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
@@ -40,7 +45,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
-
 
 /**
  * JDBC driver for P6Spy
@@ -114,6 +118,7 @@ public class P6SpyDriver implements Driver {
       jdbcEventListener.onAfterGetConnection(connectionInformation, null);
       DBContext.saveDBInfo(extractRealUrl(url),properties.getProperty("user"));
       loadEncryptDto();
+      loadUserMaskingDto();
     } catch (SQLException e) {
       connectionInformation.setTimeToGetConnectionNs(System.nanoTime() - start);
       jdbcEventListener.onAfterGetConnection(connectionInformation, e);
@@ -176,9 +181,7 @@ public class P6SpyDriver implements Driver {
     P6SpyDriver.jdbcEventListenerFactory = jdbcEventListenerFactory;
   }
 
-
-  public void loadEncryptDto(){
-
+  private void loadEncryptDto(){
     DBContext.DBInfo dbInfo = DBContext.getDBInfo();
     DBEncryptRequest dbEncryptRequest = new DBEncryptRequest();
     dbEncryptRequest.setDbName(dbInfo.getDbName());
@@ -186,11 +189,24 @@ public class P6SpyDriver implements Driver {
     dbEncryptRequest.setPort(dbInfo.getPort());
     DBEncryptHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
             .target(DBEncryptHandler.class, "http://127.0.0.1:8060/rest/db");
-
     DBEncryptDto dbEncryptDto = target.getDBEncryptDto(dbEncryptRequest);
-
-    System.out.println("loadEncryptDto success");
-
-
+    DBEncryptContext.put(dbEncryptDto);
   }
+
+  private void loadUserMaskingDto(){
+    DBContext.DBInfo dbInfo = DBContext.getDBInfo();
+    DBMaskingRequest dbMaskingRequest = new DBMaskingRequest();
+    dbMaskingRequest.setDbName(dbInfo.getDbName());
+    dbMaskingRequest.setUser(dbInfo.getUser());
+    dbMaskingRequest.setHost(dbInfo.getHost());
+    dbMaskingRequest.setPort(dbInfo.getPort());
+    dbMaskingRequest.setDbName(dbInfo.getDbName());
+
+    DBUserMaskingHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
+            .target(DBUserMaskingHandler.class, "http://127.0.0.1:8060/rest/db");
+
+    DBUserMaskingDto userMaskingDto = target.getUserMaskingDto(dbMaskingRequest);
+    DBUserMaskingContext.put(userMaskingDto);
+  }
+
 }

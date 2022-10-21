@@ -17,32 +17,26 @@
  */
 package com.longmai.dbsafe.engine.wrapper;
 
+import com.longmai.datakeeper.rest.dto.DBEncryptDto;
+import com.longmai.datakeeper.rest.dto.DBUserMaskingDto;
+import com.longmai.dbsafe.encrypt.DBEncryptFactory;
+import com.longmai.dbsafe.encrypt.IEncrypt;
 import com.longmai.dbsafe.engine.common.ResultSetInformation;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
+import com.longmai.dbsafe.masking.DBMaskingFactory;
+import com.longmai.dbsafe.masking.IMasking;
+import com.longmai.dbsafe.utils.DBEncryptContext;
+import com.longmai.dbsafe.utils.DBSQLUtils;
+import com.longmai.dbsafe.utils.DBUserMaskingContext;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.Ref;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.RowId;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Arrays;
+import java.sql.*;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -345,11 +339,30 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
   public String getString(String columnLabel) throws SQLException {
     SQLException e = null;
     try {
-
-      List<String> list = Arrays.asList("nick_name");
+      String sql = resultSetInformation.getSql();
+      String tableName = DBSQLUtils.getTableName(sql);
+      DBEncryptDto.EncryptColumnDto encryptColumn = DBEncryptContext.getEncryptColumn(tableName, columnLabel);
       String value = delegate.getString(columnLabel);
-      if (list.contains(columnLabel)){
-        value = "$"+value+"%";
+      if (Objects.nonNull(encryptColumn)){
+        //解密
+        String algorithm = encryptColumn.getAlgorithm();
+        IEncrypt encryptInstance = DBEncryptFactory.getEncryptInstance(algorithm);
+        try {
+          byte[] decrypt = encryptInstance.decrypt(encryptColumn.getSecretKey().getBytes("utf-8"), value.getBytes("utf-8"));
+          value = new String(decrypt,"utf-8");
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+
+      DBUserMaskingDto.MaskingColumnDto maskingColumn = DBUserMaskingContext.getMaskingColumn(tableName, columnLabel);
+      if (Objects.nonNull(maskingColumn)){
+        //脱敏
+        String maskingMethod = maskingColumn.getMaskingMethod();
+        String maskingMethodArgs = maskingColumn.getMaskingMethodArgs();
+        IMasking maskingInstance = DBMaskingFactory.getMaskingInstance(maskingMethod);
+        Object masking = maskingInstance.masking(value, maskingMethodArgs);
+        value = masking.toString();
       }
 
       eventListener.onAfterResultSetGet(resultSetInformation, columnLabel, value, null);

@@ -358,6 +358,7 @@ public abstract class JdbcEventListener {
    *                             there was no exception).
    */
   public void onAfterResultSetGet(ResultSetInformation resultSetInformation, String columnLabel, Object value, SQLException e) {
+
   }
 
   /**

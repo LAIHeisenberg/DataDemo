@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.longmai</groupId>
             <artifactId>datakeeper-rest-api</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -63,6 +63,11 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.18.22</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>31.1-jre</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
