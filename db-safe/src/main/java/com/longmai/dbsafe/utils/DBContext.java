@@ -31,7 +31,6 @@ public class DBContext {
     private final static String DB2_JDBCURL_REGEX = "jdbc:db2://{host}:{port}/{database}[:{params}]";
 
 
-
     public static void main(String[] args){
         saveDBInfo("jdbc:mysql://172.17.2.10:3306/test?useUnicode=true&useSSL=false","laiyz");
     }
@@ -83,7 +82,6 @@ public class DBContext {
     public static DBInfo getDBInfo(){
         return dbInfoContext.get("DB_INFO");
     }
-
 
     private static void save(DBInfo dbInfo){
         dbInfoContext.put("DB_INFO",dbInfo);

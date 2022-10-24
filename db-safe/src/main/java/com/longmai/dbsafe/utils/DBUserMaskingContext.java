@@ -5,6 +5,7 @@ import com.longmai.datakeeper.rest.dto.DBUserMaskingDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -22,6 +23,9 @@ public class DBUserMaskingContext {
         }
         Map<String, List<DBUserMaskingDto.MaskingColumnDto>> map = dbUserMaskingDto.getMaskingTableColumnMap();
         List<DBUserMaskingDto.MaskingColumnDto> encryptColumnDtos = map.get(tableName);
+        if (Objects.isNull(encryptColumnDtos)){
+            return null;
+        }
         Optional<DBUserMaskingDto.MaskingColumnDto> first = encryptColumnDtos.stream().filter(new Predicate<DBUserMaskingDto.MaskingColumnDto>() {
             @Override
             public boolean test(DBUserMaskingDto.MaskingColumnDto maskingColumnDto) {

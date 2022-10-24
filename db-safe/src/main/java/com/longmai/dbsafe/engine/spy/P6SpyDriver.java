@@ -17,6 +17,7 @@
  */
 package com.longmai.dbsafe.engine.spy;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.longmai.datakeeper.rest.db.DBEncryptHandler;
 import com.longmai.datakeeper.rest.db.DBUserMaskingHandler;
 import com.longmai.datakeeper.rest.dto.DBEncryptDto;
@@ -26,6 +27,7 @@ import com.longmai.datakeeper.rest.param.DBMaskingRequest;
 import com.longmai.dbsafe.engine.common.ConnectionInformation;
 import com.longmai.dbsafe.engine.common.P6LogQuery;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
+import com.longmai.dbsafe.engine.spy.option.SpyDotProperties;
 import com.longmai.dbsafe.engine.wrapper.ConnectionWrapper;
 import com.longmai.dbsafe.utils.DBContext;
 import com.longmai.dbsafe.utils.DBEncryptContext;
@@ -34,16 +36,14 @@ import feign.Feign;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -52,12 +52,16 @@ import java.util.logging.Logger;
 public class P6SpyDriver implements Driver {
   private static Driver instance = new P6SpyDriver();
   private static JdbcEventListenerFactory jdbcEventListenerFactory;
+  private static Map<String,String> spyDotProperties;
 
   static {
     try {
       DriverManager.registerDriver(P6SpyDriver.instance);
+      spyDotProperties =  new SpyDotProperties().getOptions();
     } catch (SQLException e) {
       throw new IllegalStateException("Could not register P6SpyDriver with DriverManager", e);
+    }catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
@@ -108,7 +112,7 @@ public class P6SpyDriver implements Driver {
     }
     final Connection conn;
     final JdbcEventListener jdbcEventListener = P6SpyDriver.jdbcEventListenerFactory.createJdbcEventListener();
-    final ConnectionInformation connectionInformation = ConnectionInformation.fromDriver(passThru);
+    final ConnectionInformation connectionInformation = ConnectionInformation.fromDataSource(new DruidDataSource());
     connectionInformation.setUrl(url);
     jdbcEventListener.onBeforeGetConnection(connectionInformation);
     try {
@@ -188,7 +192,7 @@ public class P6SpyDriver implements Driver {
     dbEncryptRequest.setHost(dbInfo.getHost());
     dbEncryptRequest.setPort(dbInfo.getPort());
     DBEncryptHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
-            .target(DBEncryptHandler.class, "http://127.0.0.1:8060/rest/db");
+            .target(DBEncryptHandler.class, spyDotProperties.get("db.encrypt.handler.url"));
     DBEncryptDto dbEncryptDto = target.getDBEncryptDto(dbEncryptRequest);
     DBEncryptContext.put(dbEncryptDto);
   }
@@ -203,7 +207,7 @@ public class P6SpyDriver implements Driver {
     dbMaskingRequest.setDbName(dbInfo.getDbName());
 
     DBUserMaskingHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
-            .target(DBUserMaskingHandler.class, "http://127.0.0.1:8060/rest/db");
+            .target(DBUserMaskingHandler.class, spyDotProperties.get("db.masking.handler.url"));
 
     DBUserMaskingDto userMaskingDto = target.getUserMaskingDto(dbMaskingRequest);
     DBUserMaskingContext.put(userMaskingDto);

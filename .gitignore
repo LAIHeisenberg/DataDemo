@@ -30,3 +30,6 @@ HELP.md
 .idea/**
 
 **/target/**
+
+*.log
+

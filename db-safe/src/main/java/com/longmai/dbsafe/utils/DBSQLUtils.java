@@ -1,6 +1,5 @@
 package com.longmai.dbsafe.utils;
 
-import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
@@ -46,27 +45,6 @@ public class DBSQLUtils {
             return arr[arr.length-1];
         }
         return null;
-    }
-
-    public static void fun2(SQLBinaryOpExpr parentLeft, Map<String, SQLExpr> map){
-        List<SQLExpr> split = SQLUtils.split(parentLeft);
-        for (SQLExpr sqlExpr : split){
-            if (sqlExpr instanceof SQLBinaryOpExpr){
-                fun2((SQLBinaryOpExpr) sqlExpr, map);
-            }else {
-                if (sqlExpr instanceof SQLInListExpr){
-                    SQLInListExpr sqlInListExpr = (SQLInListExpr) sqlExpr;
-                    SQLIdentifierExpr sqlIdentifierExpr = (SQLIdentifierExpr) sqlInListExpr.getExpr();
-                    map.put(sqlIdentifierExpr.getName(), sqlInListExpr);
-
-                }else if (sqlExpr instanceof SQLIdentifierExpr){
-                    SQLIdentifierExpr sqlIdentifierExpr = (SQLIdentifierExpr) sqlExpr;
-                    map.put(sqlIdentifierExpr.getName(), (SQLBinaryOpExpr) sqlIdentifierExpr.getParent());
-                    return;
-                }
-
-            }
-        }
     }
 
     public static void fun(SQLBinaryOpExpr parentLeft, Map<String, SQLExpr> map){
