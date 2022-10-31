@@ -16,7 +16,7 @@ public class ShieldingMasking implements IMasking{
         String[] arr = arg.trim().split(",");
         int fromIndex = parseArg(arr[0], Math.min(1,dataStr.length()-1));
         int endIndex = parseArg(arr[1], Math.max(1, dataStr.length()-2));
-        String substring = dataStr.substring(fromIndex, endIndex);
+        String substring = dataStr.substring(fromIndex, Math.min(endIndex,dataStr.length()));
 
         return dataStr.replace(substring, arr[2]);
     }

@@ -191,10 +191,16 @@ public class P6SpyDriver implements Driver {
     dbEncryptRequest.setDbName(dbInfo.getDbName());
     dbEncryptRequest.setHost(dbInfo.getHost());
     dbEncryptRequest.setPort(dbInfo.getPort());
-    DBEncryptHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
-            .target(DBEncryptHandler.class, spyDotProperties.get("db.encrypt.handler.url"));
-    DBEncryptDto dbEncryptDto = target.getDBEncryptDto(dbEncryptRequest);
-    DBEncryptContext.put(dbEncryptDto);
+    try{
+      DBEncryptHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
+              .target(DBEncryptHandler.class, spyDotProperties.get("db.encrypt.handler.url"));
+      DBEncryptDto dbEncryptDto = target.getDBEncryptDto(dbEncryptRequest);
+      DBEncryptContext.put(dbEncryptDto);
+    }catch (Exception e){
+      e.printStackTrace();
+      System.err.println("未连接上加解密服务！");
+    }
+
   }
 
   private void loadUserMaskingDto(){
@@ -206,11 +212,18 @@ public class P6SpyDriver implements Driver {
     dbMaskingRequest.setPort(dbInfo.getPort());
     dbMaskingRequest.setDbName(dbInfo.getDbName());
 
-    DBUserMaskingHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
-            .target(DBUserMaskingHandler.class, spyDotProperties.get("db.masking.handler.url"));
+    try{
+      DBUserMaskingHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
+              .target(DBUserMaskingHandler.class, spyDotProperties.get("db.masking.handler.url"));
 
-    DBUserMaskingDto userMaskingDto = target.getUserMaskingDto(dbMaskingRequest);
-    DBUserMaskingContext.put(userMaskingDto);
+      DBUserMaskingDto userMaskingDto = target.getUserMaskingDto(dbMaskingRequest);
+      DBUserMaskingContext.put(userMaskingDto);
+    }catch (Exception e){
+      e.printStackTrace();
+      System.err.println("未连接上脱敏服务！");
+
+    }
+
   }
 
 }

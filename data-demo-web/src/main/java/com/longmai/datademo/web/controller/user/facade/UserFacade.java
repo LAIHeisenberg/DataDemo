@@ -6,6 +6,7 @@ import com.longmai.datademo.security.service.dto.JwtUserDto;
 import com.longmai.datademo.service.UserService;
 import com.longmai.datademo.utils.PageUtil;
 import com.longmai.datademo.utils.SecurityUtils;
+import com.longmai.datademo.web.controller.user.param.UserQueryParam;
 import com.longmai.datademo.web.controller.user.view.UserView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class UserFacade {
     @Autowired
     private UserService userService;
 
-    public Object listAllUser(){
-        List<UserDto> userDtos = userService.listAllEnabledUser();
+    public Object listAllUser(UserQueryParam userQueryParam){
+        List<UserDto> userDtos = userService.listAllEnabledUser(userQueryParam);
         userDtos.stream().map(new Function<UserDto, UserView>() {
             @Override
             public UserView apply(UserDto userDto) {
@@ -47,6 +48,5 @@ public class UserFacade {
         userPo.setEnabled(true);
         return userService.save(userPo);
     }
-
 
 }

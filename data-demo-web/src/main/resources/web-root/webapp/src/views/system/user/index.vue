@@ -1,9 +1,36 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <el-row>
+        <!-- 搜索 -->
+        <el-input
+          v-model="query.email"
+          clearable
+          size="small"
+          placeholder="请输入邮箱"
+          style="width: 200px;"
+          class="filter-item"
+          @keyup.enter.native="crud.toQuery"
+        />
+        <el-input
+          v-model="query.nickName"
+          clearable
+          size="small"
+          placeholder="请输入昵称"
+          style="width: 200px;"
+          class="filter-item"
+          @keyup.enter.native="crud.toQuery"
+        />
+        <el-input
+          v-model="query.phone"
+          clearable
+          size="small"
+          placeholder="请输入手机号"
+          style="width: 200px;"
+          class="filter-item"
+          @keyup.enter.native="crud.toQuery"
+        />
+        <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="crud.toQuery">搜索</el-button>
         <crudOperation show="" :permission="permission" />
-      </el-row>
     </div>
     <el-row :gutter="20">
       <!--侧边部门数据-->
@@ -11,7 +38,7 @@
       <!--用户数据-->
       <el-col :xs="15" :sm="18" :md="19" :lg="20" :xl="20">
         <!--工具栏-->
-        <div class="head-container">
+        <!-- <div class="head-container">
           <el-row>
             <el-col :span="6">
               <h2 style="color:#df4c4c;">
@@ -32,31 +59,13 @@
               </h2>
             </el-col>
           </el-row>
-        </div>
+        </div> -->
         <!--表单渲染-->
         <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="570px">
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" @keydown.native="keydown($event)" />
             </el-form-item>
-<!--            <el-form-item label="真实姓名" prop="realName">-->
-<!--              <el-input v-model="form.realName" @keydown.native="keydown($event)" />-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="用户类型" prop="userType">-->
-<!--              <el-select-->
-<!--                v-model="roleDatas"-->
-<!--                style="width: 208px"-->
-<!--                placeholder="请选择"-->
-<!--                @change="changeRole"-->
-<!--              >-->
-<!--                <el-option-->
-<!--                  v-for="item in roles"-->
-<!--                  :key="item.name"-->
-<!--                  :label="item.name"-->
-<!--                  :value="item.id"-->
-<!--                />-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
             <el-form-item label="认证方式" prop="authMethod">
               <el-radio-group v-model="form.authMethod">
                 <el-radio label="1">用户口令</el-radio>
@@ -154,9 +163,9 @@ export default {
       roleDatas: null,
       defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
       permission: {
-        // add: ['admin', 'user:add'],
-        // edit: ['admin', 'user:edit'],
-        // del: ['admin', 'user:del']
+        add: ['admin', 'no-add'],
+        edit: ['admin', 'no-edit'],
+        del: ['admin', 'no-del']
       },
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
@@ -167,16 +176,6 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
-        // realName: [
-        //   { required: true, message: '请输入真实姓名', trigger: 'blur' },
-        //   { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
-        // ],
-        // authType: [
-        //   { required: true, message: '请输入真实姓名', trigger: 'blur' }
-        // ],
-        // userType: [
-        //   { required: true, message: '请选择用户类型', trigger: 'blur' }
-        // ],
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }

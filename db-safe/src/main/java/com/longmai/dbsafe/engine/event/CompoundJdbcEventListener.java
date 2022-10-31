@@ -196,7 +196,6 @@ public class CompoundJdbcEventListener extends JdbcEventListener {
     for (JdbcEventListener eventListener : eventListeners) {
       eventListener.onAfterExecuteQuery(statementInformation, timeElapsedNanos, e);
     }
-    System.out.println("onAfterExecuteQuery01..");
   }
 
   @Override
@@ -204,7 +203,6 @@ public class CompoundJdbcEventListener extends JdbcEventListener {
     for (JdbcEventListener eventListener : eventListeners) {
       eventListener.onBeforeExecuteQuery(statementInformation, sql);
     }
-    System.out.println("onAfterExecuteQuery02.."+sql);
   }
 
   @Override

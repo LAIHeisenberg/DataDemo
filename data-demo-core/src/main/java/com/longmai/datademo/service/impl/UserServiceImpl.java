@@ -31,9 +31,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> listAllEnabledUser(){
+    public List<UserDto> listAllEnabledUser(UserPo queryPo){
+        if (queryPo == null){
+            queryPo = new UserPo();
+        }
         QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("enabled", 1);
+        queryPo.setEnabled(true);
+        queryWrapper.setEntity(queryPo);
+
         return userMapper.selectList(queryWrapper).stream().map(new Function<UserPo, UserDto>() {
             @Override
             public UserDto apply(UserPo userPo) {

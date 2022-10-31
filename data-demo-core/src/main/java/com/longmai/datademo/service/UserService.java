@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserDto> listAllEnabledUser();
+    List<UserDto> listAllEnabledUser(UserPo queryPo);
 
     UserDto findByDn(String dn);
 

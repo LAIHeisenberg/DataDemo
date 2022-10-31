@@ -80,8 +80,8 @@ public class P6SpyOptions extends StandardMBean implements P6SpyLoadableOptions 
       defaults.put(AUTOFLUSH, Boolean.FALSE.toString());
       defaults.put(RELOADPROPERTIES, Boolean.FALSE.toString());
       defaults.put(RELOADPROPERTIESINTERVAL, Long.toString(60));
-      defaults.put(DATABASE_DIALECT_DATE_FORMAT, "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-      defaults.put(DATABASE_DIALECT_TIMESTAMP_FORMAT, "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+      defaults.put(DATABASE_DIALECT_DATE_FORMAT, "yyyy-MM-dd HH:mm:ss.SSS");
+      defaults.put(DATABASE_DIALECT_TIMESTAMP_FORMAT, "yyyy-MM-dd HH:mm:ss.SSS");
       defaults.put(DATABASE_DIALECT_BOOLEAN_FORMAT, "boolean");
       defaults.put(DATABASE_DIALECT_BINARY_FORMAT, HexEncodedBinaryFormat.class.getName());
       defaults.put(CUSTOM_LOG_MESSAGE_FORMAT, String.format("%s|%s|%s|connection%s|%s",

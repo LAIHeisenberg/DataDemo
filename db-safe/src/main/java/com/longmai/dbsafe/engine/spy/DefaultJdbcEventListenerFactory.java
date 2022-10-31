@@ -46,11 +46,12 @@ public class DefaultJdbcEventListenerFactory implements JdbcEventListenerFactory
     if (jdbcEventListener == null) {
       synchronized (DefaultJdbcEventListenerFactory.class) {
         if (jdbcEventListener == null) {
-          CompoundJdbcEventListener compoundEventListener = new CompoundJdbcEventListener();
-          compoundEventListener.addListener(DefaultEventListener.INSTANCE);
-          registerEventListenersFromFactories(compoundEventListener);
-          registerEventListenersFromServiceLoader(compoundEventListener);
-          jdbcEventListener = compoundEventListener;
+//          CompoundJdbcEventListener compoundEventListener = new CompoundJdbcEventListener();
+//          compoundEventListener.addListener(DefaultEventListener.INSTANCE);
+//          registerEventListenersFromFactories(compoundEventListener);
+//          registerEventListenersFromServiceLoader(compoundEventListener);
+//          jdbcEventListener = compoundEventListener;
+          jdbcEventListener = DefaultEventListener.INSTANCE;
         }
       }
     }

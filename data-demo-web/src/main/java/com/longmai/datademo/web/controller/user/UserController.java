@@ -2,6 +2,7 @@ package com.longmai.datademo.web.controller.user;
 
 import com.longmai.datademo.dto.UserDto;
 import com.longmai.datademo.web.controller.user.facade.UserFacade;
+import com.longmai.datademo.web.controller.user.param.UserQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class UserController {
 
     @PreAuthorize("@el.check('user:list')")
     @GetMapping
-    public ResponseEntity<Object> listAllUser(){
-        return new ResponseEntity<>(userFacade.listAllUser(), HttpStatus.OK);
+    public ResponseEntity<Object> listAllUser(UserQueryParam userQueryParam){
+        return new ResponseEntity<>(userFacade.listAllUser(userQueryParam), HttpStatus.OK);
     }
 
     @PostMapping

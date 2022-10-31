@@ -19,8 +19,4 @@ public class DataDemoWebApplication {
         System.err.println("############ 启动成功.....");
     }
 
-//    @Bean
-//    public SpringContextHolder springContextHolder() {
-//        return new SpringContextHolder();
-//    }
 }

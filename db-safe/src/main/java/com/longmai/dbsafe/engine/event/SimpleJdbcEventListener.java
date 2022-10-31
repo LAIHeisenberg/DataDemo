@@ -135,7 +135,6 @@ public abstract class SimpleJdbcEventListener extends JdbcEventListener {
   @Override
   public void onAfterExecuteQuery(StatementInformation statementInformation, long timeElapsedNanos, String sql, SQLException e) {
     onAfterAnyExecute(statementInformation, timeElapsedNanos, e);
-    System.out.println("onAfterExecuteQuery2.."+sql);
   }
 
   @Override

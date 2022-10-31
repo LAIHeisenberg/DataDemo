@@ -10,15 +10,15 @@ import org.springframework.data.annotation.Id;
 public class UserPo {
 
     @Id
-    private Long id;
+    protected Long id;
 
-    private String userName;
+    protected String userName;
 
-    private String nickName;
+    protected String nickName;
 
-    private String email;
+    protected String email;
 
-    private String phone;
+    protected String phone;
 
     private String gender;
 

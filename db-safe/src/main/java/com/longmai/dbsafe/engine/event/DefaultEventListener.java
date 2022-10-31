@@ -79,60 +79,62 @@ public class DefaultEventListener extends JdbcEventListener {
       }
       //加密操作
       List<DBEncryptDto.EncryptColumnDto> encryptColumnDtos = DBEncryptContext.listColumn(tableName);
-      encryptColumnDtos.forEach(new Consumer<DBEncryptDto.EncryptColumnDto>() {
-        @Override
-        public void accept(DBEncryptDto.EncryptColumnDto encryptColumnDto) {
-          String columnName = encryptColumnDto.getColumnName();
-          SQLExpr sqlExpr = map.get(columnName);
-          if (sqlExpr instanceof SQLCharExpr){
-            SQLCharExpr sqlCharExpr = (SQLCharExpr) sqlExpr;
-            String plainText = sqlCharExpr.getText();
-            String algorithm = encryptColumnDto.getAlgorithm();
-            IEncrypt encryptInstance = DBEncryptFactory.getEncryptInstance(algorithm);
-            try {
-              byte[] encryptBytes = encryptInstance.encrypt(encryptColumnDto.getSecretKey().getBytes("utf-8"), plainText.getBytes("utf-8"));
-              sqlCharExpr.setText(new String(encryptBytes,"utf-8"));
-              sqlInsertStatement.setValues(valuesClause);
-            }catch (Exception e){
-              e.printStackTrace();
+      if (encryptColumnDtos.size() > 0){
+        encryptColumnDtos.forEach(new Consumer<DBEncryptDto.EncryptColumnDto>() {
+          @Override
+          public void accept(DBEncryptDto.EncryptColumnDto encryptColumnDto) {
+            String columnName = encryptColumnDto.getColumnName();
+            SQLExpr sqlExpr = map.get(columnName);
+            if (sqlExpr instanceof SQLCharExpr){
+              SQLCharExpr sqlCharExpr = (SQLCharExpr) sqlExpr;
+              String plainText = sqlCharExpr.getText();
+              String algorithm = encryptColumnDto.getAlgorithm();
+              IEncrypt encryptInstance = DBEncryptFactory.getEncryptInstance(algorithm);
+              try {
+                byte[] encryptBytes = encryptInstance.encrypt(encryptColumnDto.getSecretKey().getBytes("utf-8"), plainText.getBytes("utf-8"));
+                sqlCharExpr.setText(new String(encryptBytes,"utf-8"));
+                sqlInsertStatement.setValues(valuesClause);
+              }catch (Exception e){
+                e.printStackTrace();
+              }
             }
           }
-        }
-      });
+        });
+      }
     }else if (sqlStatement instanceof SQLSelectStatement){
       SQLSelectStatement sqlSelectStatement = (SQLSelectStatement) sqlStatement;
       SQLSelectQueryBlock queryBlock = sqlSelectStatement.getSelect().getQueryBlock();
       Map<String, SQLExpr> map = new HashMap<>();
-      DBSQLUtils.fun((SQLBinaryOpExpr)queryBlock.getWhere(), map);
-
+      DBSQLUtils.fun(queryBlock.getWhere(), map);
       List<DBEncryptDto.EncryptColumnDto> encryptColumnDtos = DBEncryptContext.listColumn(tableName);
-      encryptColumnDtos.forEach(new Consumer<DBEncryptDto.EncryptColumnDto>() {
-        @Override
-        public void accept(DBEncryptDto.EncryptColumnDto encryptColumnDto) {
-          String columnName = encryptColumnDto.getColumnName();
-          SQLExpr sqlExpr = map.get(columnName);
-          if (sqlExpr instanceof SQLBinaryOpExpr){
-            SQLBinaryOpExpr sqlBinaryOpExpr = (SQLBinaryOpExpr)sqlExpr;
-            SQLCharExpr sqlCharExpr = (SQLCharExpr) sqlBinaryOpExpr.getRight();
-            SQLCharExpr clone = sqlCharExpr.clone();
-            String plainText = sqlCharExpr.getText();
-            String algorithm = encryptColumnDto.getAlgorithm();
-            IEncrypt encryptInstance = DBEncryptFactory.getEncryptInstance(algorithm);
-            try {
-              byte[] encryptBytes = encryptInstance.encrypt(encryptColumnDto.getSecretKey().getBytes("utf-8"), plainText.getBytes("utf-8"));
-              clone.setText(new String(encryptBytes,"utf-8"));
-              System.out.println("plainText: "+plainText + "encryptText: "+new String(encryptBytes,"utf-8"));
-              sqlBinaryOpExpr.replace(sqlCharExpr, clone);
-            } catch (Exception e) {
-              e.printStackTrace();
+      if (encryptColumnDtos.size() > 0){
+        encryptColumnDtos.forEach(new Consumer<DBEncryptDto.EncryptColumnDto>() {
+          @Override
+          public void accept(DBEncryptDto.EncryptColumnDto encryptColumnDto) {
+            String columnName = encryptColumnDto.getColumnName();
+            SQLExpr sqlExpr = map.get(columnName);
+            if (sqlExpr instanceof SQLBinaryOpExpr){
+              SQLBinaryOpExpr sqlBinaryOpExpr = (SQLBinaryOpExpr)sqlExpr;
+              SQLCharExpr sqlCharExpr = (SQLCharExpr) sqlBinaryOpExpr.getRight();
+              SQLCharExpr clone = sqlCharExpr.clone();
+              String plainText = sqlCharExpr.getText();
+              String algorithm = encryptColumnDto.getAlgorithm();
+              IEncrypt encryptInstance = DBEncryptFactory.getEncryptInstance(algorithm);
+              try {
+                byte[] encryptBytes = encryptInstance.encrypt(encryptColumnDto.getSecretKey().getBytes("utf-8"), plainText.getBytes("utf-8"));
+                clone.setText(new String(encryptBytes,"utf-8"));
+                System.out.println("plainText: "+plainText + "encryptText: "+new String(encryptBytes,"utf-8"));
+                sqlBinaryOpExpr.replace(sqlCharExpr, clone);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
 
     statementInformation.setStatementQuery(SQLUtils.toSQLString(sqlStatement));
-    System.out.println("onBeforeExecute: "+statementInformation.getSql());
   }
 
   @Override
@@ -146,13 +148,19 @@ public class DefaultEventListener extends JdbcEventListener {
   }
 
   @Override
+  public void onBeforeExecuteBatch(StatementInformation statementInformation) {
+    PreparedStatementInformation preparedStatementInformation = new PreparedStatementInformation(statementInformation.getConnectionInformation(), statementInformation.getSql());
+    onBeforeExecute(preparedStatementInformation);
+  }
+
+  @Override
   public void onAfterExecuteBatch(StatementInformation statementInformation, long timeElapsedNanos, int[] updateCounts, SQLException e) {
     statementInformation.incrementTimeElapsed(timeElapsedNanos);
   }
 
   @Override
   public void onBeforeExecuteUpdate(PreparedStatementInformation statementInformation) {
-
+    onBeforeExecute(statementInformation);
   }
 
   @Override
@@ -168,7 +176,7 @@ public class DefaultEventListener extends JdbcEventListener {
 
   @Override
   public void onBeforeExecuteQuery(PreparedStatementInformation statementInformation) {
-
+    onBeforeExecute(statementInformation);
   }
 
   @Override

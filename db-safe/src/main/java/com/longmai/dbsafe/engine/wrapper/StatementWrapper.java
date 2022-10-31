@@ -75,7 +75,6 @@ public class StatementWrapper extends AbstractWrapper implements Statement {
 
   @Override
   public ResultSet executeQuery(String sql) throws SQLException {
-    System.out.println("executeQuery:  === "+ sql);
     statementInformation.setStatementQuery(sql);
     SQLException e = null;
     long start = System.nanoTime();

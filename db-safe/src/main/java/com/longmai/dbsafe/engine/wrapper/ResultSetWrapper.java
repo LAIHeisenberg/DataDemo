@@ -17,6 +17,14 @@
  */
 package com.longmai.dbsafe.engine.wrapper;
 
+import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
+import com.alibaba.druid.sql.ast.statement.SQLSelect;
+import com.alibaba.druid.sql.ast.statement.SQLSelectItem;
+import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import com.longmai.datakeeper.rest.dto.DBEncryptDto;
 import com.longmai.datakeeper.rest.dto.DBUserMaskingDto;
 import com.longmai.dbsafe.encrypt.DBEncryptFactory;
@@ -34,9 +42,8 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.Objects;
+import java.sql.Date;
+import java.util.*;
 
 
 /**
@@ -52,6 +59,7 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
   private final ResultSet delegate;
   private final ResultSetInformation resultSetInformation;
   private final JdbcEventListener eventListener;
+  private Map<String,String> aliasMapColumnName;
 
   public static ResultSet wrap(ResultSet delegate, ResultSetInformation resultSetInformation, JdbcEventListener eventListener) {
     if (delegate == null) {
@@ -66,6 +74,23 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
     this.resultSetInformation = resultSetInformation;
     this.eventListener = eventListener;
     resultSetInformation.setResultSet(delegate);
+    this.aliasMapColumnName = new LinkedHashMap<>();
+    String sql = resultSetInformation.getSql();
+    SQLSelectStatement sqlStatement = (SQLSelectStatement)SQLUtils.parseSingleMysqlStatement(sql);
+    SQLSelect select = sqlStatement.getSelect();
+    MySqlSelectQueryBlock query = (MySqlSelectQueryBlock) select.getQuery();
+    List<SQLSelectItem> selectList = query.getSelectList();
+    try {
+      for (SQLSelectItem selectItem : selectList){
+        String alias = selectItem.getAlias();
+        if (Objects.nonNull(alias)){
+          SQLPropertyExpr expr = (SQLPropertyExpr)selectItem.getExpr();
+          aliasMapColumnName.put(alias, expr.getName());
+        }
+      }
+    }catch (Exception e){
+      e.printStackTrace();
+    }
   }
 
   public ResultSet getDelegate() {
@@ -339,9 +364,10 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
   public String getString(String columnLabel) throws SQLException {
     SQLException e = null;
     try {
+      String realColumnLabel = this.aliasMapColumnName.get(columnLabel);
       String sql = resultSetInformation.getSql();
       String tableName = DBSQLUtils.getTableName(sql);
-      DBEncryptDto.EncryptColumnDto encryptColumn = DBEncryptContext.getEncryptColumn(tableName, columnLabel);
+      DBEncryptDto.EncryptColumnDto encryptColumn = DBEncryptContext.getEncryptColumn(tableName, Objects.isNull(realColumnLabel) ? columnLabel : realColumnLabel);
       String value = delegate.getString(columnLabel);
       if (Objects.nonNull(encryptColumn)){
         //解密
@@ -355,7 +381,7 @@ public class ResultSetWrapper extends AbstractWrapper implements ResultSet {
         }
       }
 
-      DBUserMaskingDto.MaskingColumnDto maskingColumn = DBUserMaskingContext.getMaskingColumn(tableName, columnLabel);
+      DBUserMaskingDto.MaskingColumnDto maskingColumn = DBUserMaskingContext.getMaskingColumn(tableName, Objects.isNull(realColumnLabel) ? columnLabel : realColumnLabel);
       if (Objects.nonNull(maskingColumn)){
         //脱敏
         String maskingMethod = maskingColumn.getMaskingMethod();

@@ -17,6 +17,7 @@
  */
 package com.longmai.dbsafe.engine.wrapper;
 
+import com.alibaba.druid.proxy.jdbc.PreparedStatementProxyImpl;
 import com.longmai.dbsafe.engine.common.PreparedStatementInformation;
 import com.longmai.dbsafe.engine.common.ResultSetInformation;
 import com.longmai.dbsafe.engine.event.JdbcEventListener;
@@ -25,21 +26,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.ParameterMetaData;
-import java.sql.PreparedStatement;
-import java.sql.Ref;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.RowId;
-import java.sql.SQLException;
-import java.sql.SQLXML;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Calendar;
 
 /**
@@ -91,7 +78,9 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
     int rowCount = 0;
     try {
       eventListener.onBeforeExecuteUpdate(statementInformation);
-      rowCount = delegate.executeUpdate();
+      delegate.executeUpdate(statementInformation.getStatementQuery(), Statement.RETURN_GENERATED_KEYS);
+      rowCount = delegate.getUpdateCount();
+//      rowCount = delegate.executeUpdate();
       return rowCount;
     } catch (SQLException sqle) {
       e = sqle;
