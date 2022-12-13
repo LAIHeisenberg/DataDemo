@@ -1,0 +1,5 @@
+**/target/**
+**.idea/**
+**/datakeeper-web-root/**
+*.iml
+*.git*

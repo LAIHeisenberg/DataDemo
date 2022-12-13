@@ -17,32 +17,7 @@ module.exports = {
   publicPath: '/',
   outputDir: '../templates',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-  // devServer: {
-  //   port: port,
-  //   open: true,
-  //   overlay: {
-  //     warnings: false,
-  //     errors: true
-  //   },
-  //   proxy: {
-  //     '/api': {
-  //       target: process.env.VUE_APP_BASE_API,
-  //       changeOrigin: true,
-  //       pathRewrite: {
-  //         '^/api': 'api'
-  //       }
-  //     },
-  //     '/auth': {
-  //       target: process.env.VUE_APP_BASE_API,
-  //       changeOrigin: true,
-  //       pathRewrite: {
-  //         '^/auth': 'auth'
-  //       }
-  //     }
-  //   }
-  // },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
@@ -97,12 +72,12 @@ module.exports = {
 
     config
       // https://webpack.js.org/configuration/devtool/#development
-      .when(process.env.NODE_ENV === 'development',
-        config => config.devtool('cheap-source-map')
-      )
+      // .when(process.env.NODE_ENV === 'development',
+      //   config => config.devtool('cheap-source-map')
+      // )
 
     config
-      .when(process.env.NODE_ENV !== 'development',
+      .when(true,
         config => {
           config
             .plugin('ScriptExtHtmlWebpackPlugin')

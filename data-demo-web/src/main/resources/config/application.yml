@@ -15,17 +15,6 @@ spring:
     redis:
       repositories:
         enabled: false
-#  pid:
-#    file: /自行指定位置/eladmin.pid
-
-  redis:
-    #数据库索引
-    database: 14
-    host: ${REDIS_HOST:192.168.1.128}
-    port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:}
-    #连接超时时间
-    timeout: 5000
   thymeleaf:
     prefix: classpath:web-root/templates/
 task:

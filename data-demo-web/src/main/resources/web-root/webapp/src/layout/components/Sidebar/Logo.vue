@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: 'Cipherkeeper',
+      title: 'DataDemo',
       logo: Logo
     }
   }

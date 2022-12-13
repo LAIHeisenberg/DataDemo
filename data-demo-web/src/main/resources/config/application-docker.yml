@@ -1,5 +1,4 @@
 #配置数据源
-
 spring:
   datasource:
     druid:
@@ -50,13 +49,18 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-
+  data:
+    redis:
+      repositories:
+        enabled: false
   redis:
-      #数据库索引
-      database: 14
-      host: 192.168.0.162
-      port: 6379
-      password: ${REDIS_PWD:}
+    #数据库索引
+    database: 12
+    host: 192.168.0.161
+    port: 6379
+    password:
+    #连接超时时间
+    timeout: 5000
 
 # 登录相关配置
 login:

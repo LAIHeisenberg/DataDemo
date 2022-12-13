@@ -2,7 +2,7 @@ module.exports = {
   /**
    * @description 网站标题
    */
-  title: 'Cipherkeeper',
+  title: 'DataDemo',
   /**
    * @description 是否显示 tagsView
    */
