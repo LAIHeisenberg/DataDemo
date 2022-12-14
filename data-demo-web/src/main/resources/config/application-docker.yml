@@ -131,3 +131,6 @@ file:
   # 文件大小 /M
   maxSize: 10
   avatarMaxSize: 5
+
+db.encrypt.handler.url: http://192.168.0.161:8060/rest/db
+db.masking.handler.url: http://192.168.0.161:8060/rest/db

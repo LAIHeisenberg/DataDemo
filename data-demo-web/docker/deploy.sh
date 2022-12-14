@@ -7,7 +7,7 @@ npm run build:prod
 cd -
 cd ../../
 echo '打包后端代码'
-mvn clean package
+mvn clean package -P docker
 cd -
 cp ../target/data-demo-web-1.0.0-SNAPSHOT-exec.jar ./
 

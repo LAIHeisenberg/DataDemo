@@ -31,7 +31,7 @@ import java.util.Properties;
 
 public class SpyDotProperties implements P6OptionsSource {
 
-  public static final String OPTIONS_FILE_PROPERTY = "spy.properties";
+  public static final String OPTIONS_FILE_PROPERTY = "dbsafe.properties";
   public static final String OPTIONS_FILE_CHARSET_PROPERTY = OPTIONS_FILE_PROPERTY.concat(".charset");
   public static final String DEFAULT_OPTIONS_FILE = OPTIONS_FILE_PROPERTY;
 

@@ -193,7 +193,7 @@ public class P6SpyDriver implements Driver {
     dbEncryptRequest.setPort(dbInfo.getPort());
     try{
       DBEncryptHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
-              .target(DBEncryptHandler.class, spyDotProperties.get("db.encrypt.handler.url"));
+              .target(DBEncryptHandler.class, spyDotProperties.get("encrypt.url"));
       DBEncryptDto dbEncryptDto = target.getDBEncryptDto(dbEncryptRequest);
       DBEncryptContext.put(dbEncryptDto);
     }catch (Exception e){
@@ -214,7 +214,7 @@ public class P6SpyDriver implements Driver {
 
     try{
       DBUserMaskingHandler target = Feign.builder().encoder(new GsonEncoder()).decoder(new GsonDecoder())
-              .target(DBUserMaskingHandler.class, spyDotProperties.get("db.masking.handler.url"));
+              .target(DBUserMaskingHandler.class, spyDotProperties.get("masking.url"));
 
       DBUserMaskingDto userMaskingDto = target.getUserMaskingDto(dbMaskingRequest);
       DBUserMaskingContext.put(userMaskingDto);

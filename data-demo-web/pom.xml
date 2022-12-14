@@ -80,6 +80,29 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <!-- 本地开发环境 -->
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>dev</id>
+            <build>
+                <filters>
+                    <filter>src/main/resources/dbsafe/dbsafe_dev.properties</filter>
+                </filters>
+            </build>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <build>
+                <filters>
+                    <filter>src/main/resources/dbsafe/dbsafe_docker.properties</filter>
+                </filters>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -93,9 +116,18 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <includes>
+                    <include>dbsafe.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
                 <excludes>
                     <exclude>web-root/webapp/**</exclude>
+                    <exclude>dbsafe.properties</exclude>
                 </excludes>
+                <filtering>false</filtering>
             </resource>
         </resources>
     </build>
