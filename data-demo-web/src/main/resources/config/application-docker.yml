@@ -5,9 +5,9 @@ spring:
       db-type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: com.longmai.dbsafe.engine.spy.P6SpyDriver
       ##driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:p6spy:mysql://192.168.0.161:3316/datademo?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-      username: root
-      password: root
+      url: jdbc:p6spy:mysql://192.168.0.162:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      username: laiyz
+      password: laiyz123!
       # 初始连接数
       initial-size: 5
       # 最小连接数
@@ -56,7 +56,7 @@ spring:
   redis:
     #数据库索引
     database: 12
-    host: 192.168.0.161
+    host: 192.168.0.162
     port: 6379
     password:
     #连接超时时间
@@ -132,5 +132,4 @@ file:
   maxSize: 10
   avatarMaxSize: 5
 
-db.encrypt.handler.url: http://192.168.0.161:8060/rest/db
-db.masking.handler.url: http://192.168.0.161:8060/rest/db
+

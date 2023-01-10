@@ -11,8 +11,8 @@ mvn clean package -P docker
 cd -
 cp ../target/data-demo-web-1.0.0-SNAPSHOT-exec.jar ./
 
-echo '设置DOCK_HOST=tcp://192.168.0.161:2375'
-export DOCKER_HOST="tcp://192.168.0.161:2375"
+#echo '设置DOCK_HOST=tcp://192.168.0.161:2375'
+#export DOCKER_HOST="tcp://192.168.0.161:2375"
 echo '停止容器: datademo-web'
 container_id=`docker container ps -a | grep 'datademo-web' | tr -s ' ' | cut -d ' ' -f 1`
 docker container stop $container_id
@@ -23,4 +23,4 @@ docker build --no-cache -f Dockerfile -t datademo-web ./
 
 rm -f data-demo-web-1.0.0-SNAPSHOT-exec.jar
 echo '执行docker run: '
-docker run -d -p 8090:8090 --name datademo-web -v /data/sqlite:/data/sqlite --link cipher_redis:cipher_redis --link cipher_mysql:cipher_mysql -d datademo-web
+docker run -d -p 8090:8090 --name datademo-web -d datademo-web
